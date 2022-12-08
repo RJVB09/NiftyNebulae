@@ -13,6 +13,7 @@ namespace NiftyNebulae
         void Update()
         {
             Debug.Log("ALLAH OBAMA PLUGIN WORKING LMAO");
+            //lol
         }
     }
 }
