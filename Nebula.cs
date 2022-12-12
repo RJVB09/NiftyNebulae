@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace NiftyNebulae
 {
+    [DefaultExecutionOrder(40000)]
     class Nebula : MonoBehaviour
     {
         public GameObject scaledSpaceGO;
