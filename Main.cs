@@ -11,6 +11,13 @@ namespace NiftyNebulae
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class Main : MonoBehaviour
     {
+        /*
+         * TODO:
+         * -fix nebula rendering in front of scaled space objects
+         * -fix rotating nebula (prob scaledspace) when timewarping on planet
+         * -fix nebula rendering in front of atmosphere without getting the funny black bands
+        */
+
         public static Main instance;
 
         internal CelestialBody mun;
