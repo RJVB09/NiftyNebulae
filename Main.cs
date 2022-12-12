@@ -11,9 +11,17 @@ namespace NiftyNebulae
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class Main : MonoBehaviour
     {
-        CelestialBody mun;
-        GameObject scaledObject;
-        GameObject cube;
+        public static Main instance;
+
+        internal CelestialBody mun;
+        internal GameObject scaledObject;
+        internal GameObject cube;
+        
+        void Awake()
+        {
+            instance = this;
+        }
+
         void Start()
         {
             mun = FlightGlobals.Bodies.Find(a => a.name == "Sun");
@@ -28,72 +36,87 @@ namespace NiftyNebulae
             cube.layer = scaledObject.layer;
             
             //cube.transform.SetParent(scaledObject.transform.parent, true);
-            cube.AddComponent<Nebula>().scaledSpaceGO = scaledObject;
-            Nebula nebula = cube.GetComponent<Nebula>();
-
+            Nebula nebula = cube.AddComponent<Nebula>();
+            nebula.scaledSpaceGO = scaledObject;
             nebula.offset = Vector3.one * 400000;
             nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/crap_nebula.png");
 
-            log("lossyScale: " + cube.transform.lossyScale);
+            Log("lossyScale: " + cube.transform.lossyScale);
             InitializeHDR();
         }
 
-        void Update()
-        {
-            //cube.transform.position = scaledObject.transform.position;
-            Main.log("cubeScale: " + cube.transform.lossyScale);
-            Main.log("cubePos: " + cube.transform.position);
-            Main.log("sunScale: " + scaledObject.transform.lossyScale);
-            Main.log("sunPos: " + scaledObject.transform.position);
-            Main.log("cubeLocalPos: " + cube.transform.localPosition);
-            Main.log("sunLocalPos: " + scaledObject.transform.localPosition);
-            log("sunlayer: " + scaledObject.layer);
-            log("cubelayer: " + cube.layer);
-            log("sunac: " + scaledObject.activeSelf);
-            log("cubeac: " + cube.activeSelf);
-            log("sunParent: " + scaledObject.activeSelf);
-            log("cubeParent: " + cube.activeSelf);
-            log("testingThing: " + SceneManager.GetActiveScene().name + (cube != null));
-            log("scale: " + ScaledSpace.ScaleFactor);
-        }
+        //void Update()
+        //{
+        //    //cube.transform.position = scaledObject.transform.position;
+        //    //Log("cubeScale: " + cube.transform.lossyScale);
+        //    //Log("cubePos: " + cube.transform.position);
+        //    //Log("sunScale: " + scaledObject.transform.lossyScale);
+        //    //Log("sunPos: " + scaledObject.transform.position);
+        //    //Log("cubeLocalPos: " + cube.transform.localPosition);
+        //    //Log("sunLocalPos: " + scaledObject.transform.localPosition);
+        //    //Log("sunlayer: " + scaledObject.layer);
+        //    //Log("cubelayer: " + cube.layer);
+        //    //Log("sunac: " + scaledObject.activeSelf);
+        //    //Log("cubeac: " + cube.activeSelf);
+        //    //Log("sunParent: " + scaledObject.activeSelf);
+        //    //Log("cubeParent: " + cube.activeSelf);
+        //    //Log("testingThing: " + SceneManager.GetActiveScene().name + (cube != null));
+        //    //Log("scale: " + ScaledSpace.ScaleFactor);
+        //}
 
         void InitializeHDR()
         { 
-            Camera[] cameras = GameObject.FindObjectsOfType<Camera>();
+            Camera[] cameras = FindObjectsOfType<Camera>();
 
             foreach (Camera camera in cameras)
             {
-                log("ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ: " + camera.name + ", cullingMask: " + Convert.ToString(camera.cullingMask));
+                Log("ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ: " + camera.name + ", cullingMask: " + Convert.ToString(camera.cullingMask));
                 camera.allowHDR = true;
             }
             //Graphics.activeTier
         }
 
-        public static void log(object msg)
+        public static void Log(object msg)
         {
             Debug.Log("[NiftyNebulae] " + msg);
         }
-        public static void logError(object msg)
+        public static void LogError(object msg)
         {
             Debug.LogError("[NiftyNebulae] " + msg);
+        }
+
+        /// <summary>
+        /// Debugs all attributes of an object
+        /// </summary>
+        /// <param name="problem">your object</param>
+        /// <param name="type">typeof(your object's class name)</param>
+        public static void LogAllProperties(object problem, Type type)
+        {
+            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
+            foreach (System.Reflection.PropertyInfo property in properties)
+                Debug.Log(property.Name + ": " + property.GetValue(problem));
+        }
+        public static void LogAllProperties(object[] problem, Type type)
+        {
+            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
+            for (int i = 0; i < problem.Length; i++)
+            {
+                Debug.Log("Debug Object Index: " + i);
+                foreach (System.Reflection.PropertyInfo property in properties)
+                    Debug.Log(property.Name + ": " + property.GetValue(problem));
+            }
         }
     }
 
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class FlightDebug : MonoBehaviour
     {
-        GameObject scaledObject;
-        GameObject cube;
-        void Start()
-        {
-            scaledObject = FlightGlobals.Bodies.Find(a => a.name == "Sun").scaledBody;
-            cube = scaledObject.GetChild("CHILD OF THE SUN");
-        }
-
         void Update()
         {
-            Main.log("active: " + scaledObject.activeSelf);
-            Main.log("cube active: " + cube.activeSelf);
+            Main.Log("active: " + Main.instance.scaledObject.activeSelf);
+            Main.Log("cube active: " + Main.instance.cube.activeSelf);
         }
     }
 }

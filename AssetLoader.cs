@@ -13,35 +13,32 @@ namespace NiftyNebulae
     {
         public static Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
         public static Dictionary<string, ComputeShader> computeShaders = new Dictionary<string, ComputeShader>();
+
         public void Awake()
         {
             string path = Path.Combine(KSPUtil.ApplicationRootPath, "GameData/NiftyNebulae/shaders/shaders-win");
-            path = path + ".unity3d";
+            path += ".unity3d";
 
             var assetBundle = AssetBundle.LoadFromFile(path);
             if (assetBundle == null)
-            {
-                Main.logError("Asset bundle failed to load. Try reinstalling correctly.");
-            }
+                Main.LogError("Asset bundle failed to load. Try reinstalling correctly.");
             else
-            {
-                Main.log("Asset bundle loaded.");
-            }
+                Main.Log("Asset bundle loaded.");
 
 
             Shader[] assetbundleShaders = assetBundle.LoadAllAssets<Shader>();
-            Main.log("Loading shaders from asset bundle:");
+            Main.Log("Loading shaders from asset bundle:");
             foreach (Shader currentShader in assetbundleShaders)
             {
                 shaders.Add(currentShader.name, currentShader);
-                Main.log("- " + currentShader.name);
+                Main.Log("- " + currentShader.name);
             }
             ComputeShader[] assetbundleComputeShaders = assetBundle.LoadAllAssets<ComputeShader>();
-            Main.log("Loading compute shaders from asset bundle:");
+            Main.Log("Loading compute shaders from asset bundle:");
             foreach (ComputeShader currentComputeShader in assetbundleComputeShaders)
             {
                 computeShaders.Add(currentComputeShader.name, currentComputeShader);
-                Main.log("- " + currentComputeShader.name);
+                Main.Log("- " + currentComputeShader.name);
             }
         }
 
@@ -52,21 +49,19 @@ namespace NiftyNebulae
 
         public static Texture2D LoadPNG(string filePath) //From Rootpath
         {
-
             Texture2D tex = null;
             byte[] fileData;
 
-            if (File.Exists(Path.Combine(KSPUtil.ApplicationRootPath, filePath)))
+            string fullPath = Path.Combine(KSPUtil.ApplicationRootPath, filePath);
+            if (File.Exists(fullPath))
             {
-                fileData = File.ReadAllBytes(Path.Combine(KSPUtil.ApplicationRootPath, filePath));
+                fileData = File.ReadAllBytes(fullPath);
                 tex = new Texture2D(2, 2);
                 tex.LoadImage(fileData);
-                Main.log("Loaded texture: " + Path.Combine(KSPUtil.ApplicationRootPath, filePath));
+                Main.Log("Loaded texture: " + fullPath);
             }
             else
-            {
-                Main.logError("The path, " + Path.Combine(KSPUtil.ApplicationRootPath, filePath) + " does not lead to a texture.");
-            }
+                Main.LogError("The path, " + fullPath + " does not lead to a texture.");
             return tex;
         }
     }
