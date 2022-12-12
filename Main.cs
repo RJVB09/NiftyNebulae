@@ -78,11 +78,11 @@ namespace NiftyNebulae
 
         public static void Log(object msg)
         {
-            Debug.Log("[NiftyNebulae] " + msg);
+            Debug.Log("[NiftyNebulae]: " + msg);
         }
         public static void LogError(object msg)
         {
-            Debug.LogError("[NiftyNebulae] " + msg);
+            Debug.LogError("[NiftyNebulae]: " + msg);
         }
 
         /// <summary>
