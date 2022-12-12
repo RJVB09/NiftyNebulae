@@ -23,7 +23,7 @@ namespace NiftyNebulae
             cube.name = "CHILD OF THE SUN";
             cube.transform.SetParent(scaledObject.transform,true);
             cube.transform.localPosition = Vector3.zero;
-            float sizeInBodyRadii = 280f;
+            float sizeInBodyRadii = 560f;
             cube.transform.localScale = Vector3.one * 2 * 1000 * sizeInBodyRadii; //radius body in scaled space as child is 1000
             cube.layer = scaledObject.layer;
             
