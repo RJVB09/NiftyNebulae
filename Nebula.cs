@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NiftyNebulae
 {
-    [DefaultExecutionOrder(40000)]
+    [DefaultExecutionOrder(580)]
     class Nebula : MonoBehaviour
     {
         public GameObject scaledSpaceGO;
@@ -27,6 +27,7 @@ namespace NiftyNebulae
             material.SetFloat("_Density", 34.6410161514f / transform.lossyScale.magnitude); // 20f * sqrt(3) / length of diagonal
             material.SetTexture("_Texture2D", texture);
             material.SetInt("_Texture2DSliceLength", cubeResolution);
+            material.renderQueue = 4000;
 
             //Main.log("DomainScale: " + transform.lossyScale);
             //material.SetColor("_FillColor", Color.red);

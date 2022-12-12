@@ -36,8 +36,6 @@ namespace NiftyNebulae
             cube.transform.localScale = Vector3.one * 2 * 1000 * sizeInBodyRadii; //radius body in scaled space as child is 1000
             cube.layer = scaledObject.layer;
 
-            LogAllProperties(kerbin, typeof(CelestialBody));
-            
             //cube.transform.SetParent(scaledObject.transform.parent, true);
             Nebula nebula = cube.AddComponent<Nebula>();
             nebula.scaledSpaceGO = scaledObject;
@@ -116,6 +114,19 @@ namespace NiftyNebulae
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class FlightDebug : MonoBehaviour
     {
+        void Start()
+        {
+            AtmosphereFromGround[] atmospheres = GameObject.FindObjectsOfType<AtmosphereFromGround>();
+
+            foreach (AtmosphereFromGround atmo in atmospheres)
+            {
+                Main.Log("GOname: " + atmo.gameObject.name);
+                Main.Log("atmoName: " + atmo.planet.name);
+                Main.Log("shader: " + atmo.GetComponent<MeshRenderer>().material.shader.name);
+                Main.Log("render queue: " + atmo.GetComponent<MeshRenderer>().material.renderQueue);
+            }
+        }
+
         void Update()
         {
             Main.Log("active: " + Main.instance.scaledObject.activeSelf);
