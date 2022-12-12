@@ -23,7 +23,7 @@ namespace NiftyNebulae
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             material.SetInt("_MaxSteps", 1000);
             material.SetFloat("_StepSize", transform.lossyScale.x * 0.01f); //old 0.005
-            material.SetFloat("_Density", 0.2f);
+            material.SetFloat("_Density", 1f / (0.05f * transform.lossyScale.x));
             material.SetTexture("_Texture2D", texture);
             material.SetInt("_Texture2DSliceLength", cubeResolution);
 

@@ -16,26 +16,31 @@ namespace NiftyNebulae
         GameObject cube;
         void Start()
         {
-            mun = FlightGlobals.Bodies.Find(a => a.name == "Mun");
+            mun = FlightGlobals.Bodies.Find(a => a.name == "Sun");
             scaledObject = mun.scaledBody;
              
             cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.name = "CHILD OF THE SUN";
             cube.transform.SetParent(scaledObject.transform,true);
             cube.transform.localPosition = Vector3.zero;
-            cube.transform.localScale = Vector3.one * 2 * 2000; //radius body in scaled space as child is 1000
+            float sizeInBodyRadii = 280f;
+            cube.transform.localScale = Vector3.one * 2 * 1000 * sizeInBodyRadii; //radius body in scaled space as child is 1000
             cube.layer = scaledObject.layer;
-
+            
+            //cube.transform.SetParent(scaledObject.transform.parent, true);
             cube.AddComponent<Nebula>().scaledSpaceGO = scaledObject;
             Nebula nebula = cube.GetComponent<Nebula>();
 
             nebula.offset = Vector3.one * 400000;
             nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/crap_nebula.png");
+
+            log("lossyScale: " + cube.transform.lossyScale);
             InitializeHDR();
         }
 
         void Update()
         {
-            //cube.transform.position = scaledObject.transform.position + Vector3.one * 400000;
+            //cube.transform.position = scaledObject.transform.position;
             Main.log("cubeScale: " + cube.transform.lossyScale);
             Main.log("cubePos: " + cube.transform.position);
             Main.log("sunScale: " + scaledObject.transform.lossyScale);
@@ -71,6 +76,24 @@ namespace NiftyNebulae
         public static void logError(object msg)
         {
             Debug.LogError("[NiftyNebulae] " + msg);
+        }
+    }
+
+    [KSPAddon(KSPAddon.Startup.Flight, false)]
+    public class FlightDebug : MonoBehaviour
+    {
+        GameObject scaledObject;
+        GameObject cube;
+        void Start()
+        {
+            scaledObject = FlightGlobals.Bodies.Find(a => a.name == "Sun").scaledBody;
+            cube = scaledObject.GetChild("CHILD OF THE SUN");
+        }
+
+        void Update()
+        {
+            Main.log("active: " + scaledObject.activeSelf);
+            Main.log("cube active: " + cube.activeSelf);
         }
     }
 }
