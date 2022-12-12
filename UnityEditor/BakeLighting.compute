@@ -1,0 +1,111 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+RWTexture2D<float4> Result;
+Texture2D<float4> InputTexture;
+Texture2D<float4> LightingInfo;
+
+struct LightSource
+{
+    float3 position;
+    float4 color;
+    float fallOffPow;
+    float range;
+};
+
+StructuredBuffer<LightSource> LightSourcesBuffer;
+int LightSourcesBuffer_Length;
+int _Texture2DSize;
+int _Texture3DSize;
+float _StepSize;
+float _Density;
+
+int2 voxelPosToSamplePos(int3 voxelPos, int3 voxelOffset)
+{
+    //voxelPos = max(min(voxelPos + voxelOffset,_Texture3DSize - 1),0);
+    voxelPos += voxelOffset;
+    voxelPos.x = voxelPos.x % _Texture3DSize;
+    voxelPos.y = voxelPos.y % _Texture3DSize;
+    voxelPos.z = voxelPos.z % _Texture3DSize;
+
+    int2 zw = int2(_Texture3DSize*floor(voxelPos.z/sqrt(_Texture3DSize)),_Texture3DSize*(voxelPos.z % sqrt(_Texture3DSize)));
+
+    return voxelPos.xy + zw;
+}
+
+//sorta broken for now
+float raymarchLightSource(float3 position, float3 lightPosition)
+{
+    float accumulation = 0;
+    float depth = length(lightPosition - position);
+    float3 rayDir = normalize(lightPosition - position);
+    int maxSteps = ceil(sqrt(3)/_StepSize);
+    float3 rayPos = position;
+    float depthTravelled = 0;
+    int stepsTaken = 0;
+
+    while (stepsTaken < maxSteps)
+    {
+        if ((depthTravelled + _StepSize) > depth) //march forward until the distance is overshot with steps of _StepSize
+        {
+            break;
+        }
+        else
+        {
+            rayPos += rayDir * _StepSize;
+            float4 volumeSample = LightingInfo[voxelPosToSamplePos(rayPos*float(_Texture3DSize),float3(0,0,0))];
+            accumulation += volumeSample.g * _StepSize;
+            depthTravelled += _StepSize;
+            stepsTaken++;
+        }
+    }
+    //float lastStep = depth - depthTravelled;
+    //rayPos += rayDir * lastStep;
+    //float4 volumeSampleLast = LightingInfo[voxelPosToSamplePos(rayPos*float(_Texture3DSize),float3(0,0,0))];
+    //accumulation += volumeSampleLast.b * lastStep;
+    //depthTravelled += lastStep;
+
+    accumulation *= _Density;
+    //accumulation = depthTravelled;
+
+    return accumulation;
+}
+
+float3 screen(float3 a, float3 b)
+{
+    return float3(1,1,1) - (float3(1,1,1) - a) * (float3(1,1,1) - b);
+}
+
+float3 calculateLighting(float3 uv3D, float3 uvCoordsFromCenter, float3 coordsInCube)
+{
+    float3 colorOut = float3(0,0,0);
+    for (int i = 0; i < LightSourcesBuffer_Length; i++)
+    {
+        float3 sampledColor = exp(-1*raymarchLightSource(uv3D,LightSourcesBuffer[i].position));
+        sampledColor *= pow(clamp((1-(1/LightSourcesBuffer[i].range)*length(uv3D-LightSourcesBuffer[i].position)),0,1),LightSourcesBuffer[i].fallOffPow);
+        sampledColor *= LightSourcesBuffer[i].color;
+        colorOut = screen(colorOut,sampledColor);
+    }
+    return colorOut;
+}
+
+[numthreads(32,32,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    float3 coordsInCube = float3(id.x%float(_Texture3DSize), id.y%float(_Texture3DSize), floor(id.y/float(_Texture3DSize)) + floor(id.x/float(_Texture3DSize)) * (float(_Texture2DSize)/float(_Texture3DSize)));
+    float3 uv3D = coordsInCube / float(_Texture3DSize);
+    float3 uvCoordsFromCenter = (uv3D-0.5)*2; //-1 to 1
+    float circle = pow(clamp(1-length(uv3D-LightSourcesBuffer[0].position),0,1),1);
+    
+    float fadePow = 40;
+    float3 bounds = pow(1.1*uvCoordsFromCenter,float3(fadePow,fadePow,fadePow));
+    float boundsFade = 1 - clamp(bounds.x + bounds.y + bounds.z,0,1);
+    
+    //float col = uv3D;
+    //float4 col = InputTexture[id.xy] * float4(float3(1,1,1)*(exp(-1*raymarchLightSource(uv3D,LightSourcesBuffer[0].position)))*circle,boundsFade);//(exp(-1*raymarchLightSource(uv3D,LightSourcesBuffer[0].position)))*0.5,boundsFade);
+    float4 col = InputTexture[id.xy] * float4(lerp(calculateLighting(uv3D,uvCoordsFromCenter,coordsInCube),float3(1,1,1),LightingInfo[voxelPosToSamplePos(uv3D*float(_Texture3DSize),float3(0,0,0))].r),boundsFade);//(exp(-1*raymarchLightSource(uv3D,LightSourcesBuffer[0].position)))*0.5,boundsFade);
+	//(random3(coordsInCube) + float3(1,1,1))/2
+
+    Result[id.xy] = col;
+}
