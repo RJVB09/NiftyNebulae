@@ -25,6 +25,7 @@ namespace NiftyNebulae
         void Start()
         {
             mun = FlightGlobals.Bodies.Find(a => a.name == "Sun");
+            CelestialBody kerbin = FlightGlobals.Bodies.Find(a => a.name == "Kerbin");
             scaledObject = mun.scaledBody;
              
             cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -34,6 +35,8 @@ namespace NiftyNebulae
             float sizeInBodyRadii = 560f;
             cube.transform.localScale = Vector3.one * 2 * 1000 * sizeInBodyRadii; //radius body in scaled space as child is 1000
             cube.layer = scaledObject.layer;
+
+            LogAllProperties(kerbin, typeof(CelestialBody));
             
             //cube.transform.SetParent(scaledObject.transform.parent, true);
             Nebula nebula = cube.AddComponent<Nebula>();
@@ -90,7 +93,7 @@ namespace NiftyNebulae
         /// </summary>
         /// <param name="problem">your object</param>
         /// <param name="type">typeof(your object's class name)</param>
-        public static void LogAllProperties(object problem, Type type)
+        public static void LogAllProperties(object problem, Type type) //needs fixing, doesn't print private nor properties
         {
             System.Reflection.PropertyInfo[] properties = type.GetProperties();
             Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
