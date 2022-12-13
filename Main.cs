@@ -39,7 +39,7 @@ namespace NiftyNebulae
             cube.name = "CHILD OF THE SUN";
             cube.transform.SetParent(scaledObject.transform,true);
             cube.transform.localPosition = Vector3.zero;
-            float sizeInBodyRadii = 560f;
+            float sizeInBodyRadii = 56000f;
             cube.transform.localScale = Vector3.one * 2 * 1000 * sizeInBodyRadii; //radius body in scaled space as child is 1000
             cube.layer = scaledObject.layer;
 
@@ -47,7 +47,7 @@ namespace NiftyNebulae
             Nebula nebula = cube.AddComponent<Nebula>();
             nebula.scaledSpaceGO = scaledObject;
             nebula.offset = Vector3.one * 400000;
-            nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/crap_nebula.png");
+            nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/cat_eye_2.png");
 
             Log("lossyScale: " + cube.transform.lossyScale);
             InitializeHDR();
