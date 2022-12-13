@@ -24,7 +24,7 @@ Shader "Unlit/Nebula3D"
         Pass
         {
             Cull Front
-            ZTest Always
+            //ZTest Always  ///TURN OF FOR KSP
 
             CGPROGRAM
             #pragma vertex vert
@@ -55,10 +55,10 @@ Shader "Unlit/Nebula3D"
 
             float3 _DomainScale;
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
                 float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w;
-                fixed4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV);
+                float4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV);
                 backGroundColor.a = length(i.worldPos - float3(0,0,0)/*CamPos*/);
                 backGroundColor.a /= max(_DomainScale.x,max(_DomainScale.y,_DomainScale.z)) * 1000;
 
@@ -294,11 +294,11 @@ Shader "Unlit/Nebula3D"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
                 // sample the texture
                 float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w; //WORKS IN KSP
-                fixed4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV); //WORKS IN KSP
+                float4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV); //WORKS IN KSP
                 //float sceneDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,screenSpaceUV)); //Depth in world units (not matching atm)
                 float sceneDepth = GetSceneDepth(screenSpaceUV); //WORKS IN KSP
                 float3 viewDirection = normalize(i.worldPos - float3(0,0,0)/*CamPos*/); //WORKS IN KSP
@@ -522,19 +522,20 @@ Shader "Unlit/Nebula3D"
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
                 
                 float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w;
                 float3 viewDirection = normalize(i.worldPos - float3(0,0,0)/*CamPos*/); //WORKS IN KSP
                 float depthVal = GetSceneDepth(screenSpaceUV); //Depth in world units
-                fixed4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV); //WORKS IN KSP
+                float4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV); //WORKS IN KSP
                 float thickness = length(i.worldPos - float3(0,0,0)/*CamPos*/); //WORKS IN KSP
                 //thickness = min(depthVal,thickness); //DOESNT WORKS IN KSP    ////PROBLEM LINE PLEASE FIX
                 
                 float3 col = float3(1,0,1);
                 float4 raymarchedColor = Raymarch(viewDirection,float3(0,0,0)/*CamPos*/,thickness);
                 col = lerp(backGroundColor.rgb,raymarchedColor.rgb,raymarchedColor.a);
+                //col = lerp(backGroundColor.rgb,raymarchedColor.rgb,0);
                 //l = lerp(backGroundColor.rgb,float3(0,thickness,1),0.5);
                 //col = lerp(backGroundColor.rgb,raymarchedColor.rgb,raymarchedColor.a);
                 //backGroundColor.rgb = float3(thickness,0,0);

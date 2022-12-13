@@ -130,7 +130,10 @@ namespace NiftyNebulae
                 Main.Log("GOname: " + atmo.gameObject.name);
                 Main.Log("atmoName: " + atmo.planet.name);
                 Main.Log("shader: " + atmo.GetComponent<MeshRenderer>().material.shader.name);
-                Main.Log("render queue: " + atmo.GetComponent<MeshRenderer>().material.renderQueue);
+                Main.Log("atmo render queue: " + atmo.GetComponent<MeshRenderer>().material.renderQueue);
+                Main.Log("render queue planet: " + atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue);
+                atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue = 2500; //first: nebula, second: planet, third: atmosphere
+                //atmo.GetComponent<MeshRenderer>().material.shader;
             }
         }
 

@@ -27,7 +27,7 @@ namespace NiftyNebulae
             material.SetFloat("_Density", 34.6410161514f / transform.lossyScale.magnitude); // 20f * sqrt(3) / length of diagonal
             material.SetTexture("_Texture2D", texture);
             material.SetInt("_Texture2DSliceLength", cubeResolution);
-            material.renderQueue = 4000;
+            material.renderQueue = 2000;
 
             //Main.log("DomainScale: " + transform.lossyScale);
             //material.SetColor("_FillColor", Color.red);
