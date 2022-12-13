@@ -80,6 +80,7 @@ namespace NiftyNebulae
             {
                 Log("ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ: " + camera.name + ", cullingMask: " + Convert.ToString(camera.cullingMask));
                 camera.allowHDR = true;
+                camera.nearClipPlane *= 1.5f;
             }
             //Graphics.activeTier
         }
@@ -100,14 +101,14 @@ namespace NiftyNebulae
         /// <param name="type">typeof(your object's class name)</param>
         public static void LogAllProperties(object problem, Type type) //needs fixing, doesn't print private nor properties
         {
-            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            System.Reflection.PropertyInfo[] properties = type.GetProperties(System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField);
             Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
             foreach (System.Reflection.PropertyInfo property in properties)
                 Debug.Log(property.Name + ": " + property.GetValue(problem));
         }
         public static void LogAllProperties(object[] problem, Type type)
         {
-            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            System.Reflection.PropertyInfo[] properties = type.GetProperties(System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField);
             Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
             for (int i = 0; i < problem.Length; i++)
             {
