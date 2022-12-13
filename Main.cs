@@ -35,7 +35,7 @@ namespace NiftyNebulae
             CelestialBody kerbin = FlightGlobals.Bodies.Find(a => a.name == "Kerbin");
             scaledObject = mun.scaledBody;
              
-            cube = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.name = "CHILD OF THE SUN";
             cube.transform.SetParent(scaledObject.transform,true);
             cube.transform.localPosition = Vector3.zero;
@@ -44,10 +44,10 @@ namespace NiftyNebulae
             cube.layer = scaledObject.layer;
 
             //cube.transform.SetParent(scaledObject.transform.parent, true);
-            //Nebula nebula = cube.AddComponent<Nebula>();
-            //nebula.scaledSpaceGO = scaledObject;
-            //nebula.offset = Vector3.one * 400000;
-            //nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/cat_eye_2.png");
+            Nebula nebula = cube.AddComponent<Nebula>();
+            nebula.scaledSpaceGO = scaledObject;
+            nebula.offset = Vector3.one * 400000;
+            nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/cat_eye_2.png");
 
             Log("lossyScale: " + cube.transform.lossyScale);
             InitializeHDR();
@@ -80,7 +80,7 @@ namespace NiftyNebulae
             {
                 Log("ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ: " + camera.name + ", cullingMask: " + Convert.ToString(camera.cullingMask));
                 camera.allowHDR = true;
-                Log("farClipPlane: " + camera.farClipPlane);
+                camera.nearClipPlane *= 1.5f;
             }
             //Graphics.activeTier
         }
@@ -101,14 +101,14 @@ namespace NiftyNebulae
         /// <param name="type">typeof(your object's class name)</param>
         public static void LogAllProperties(object problem, Type type) //needs fixing, doesn't print private nor properties
         {
-            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            System.Reflection.PropertyInfo[] properties = type.GetProperties(System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField);
             Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
             foreach (System.Reflection.PropertyInfo property in properties)
                 Debug.Log(property.Name + ": " + property.GetValue(problem));
         }
         public static void LogAllProperties(object[] problem, Type type)
         {
-            System.Reflection.PropertyInfo[] properties = type.GetProperties();
+            System.Reflection.PropertyInfo[] properties = type.GetProperties(System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField);
             Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
             for (int i = 0; i < problem.Length; i++)
             {
@@ -122,7 +122,6 @@ namespace NiftyNebulae
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class FlightDebug : MonoBehaviour
     {
-        Camera scaledCam;
         void Start()
         {
             AtmosphereFromGround[] atmospheres = GameObject.FindObjectsOfType<AtmosphereFromGround>();
@@ -143,7 +142,6 @@ namespace NiftyNebulae
         {
             Main.Log("active: " + Main.instance.scaledObject.activeSelf);
             Main.Log("cube active: " + Main.instance.cube.activeSelf);
-            Main.Log("meshrenderer active: " + Main.instance.cube.GetComponent<MeshRenderer>().enabled);
         }
     }
 }
