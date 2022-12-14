@@ -11,12 +11,8 @@ namespace NiftyNebulae
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class Main : MonoBehaviour
     {
-        /*
-         * TODO:
-         * -fix nebula rendering in front of scaled space objects
-         * -fix rotating nebula (prob scaledspace) when timewarping on planet
-         * -fix nebula rendering in front of atmosphere without getting the funny black bands
-        */
+        public Camera scaledSpaceCam;
+        public UniverseSpace universeSpace;
 
         public static Main instance;
 
@@ -26,51 +22,22 @@ namespace NiftyNebulae
         
         void Awake()
         {
+            Camera[] cameras = FindObjectsOfType<Camera>();
+            foreach (Camera camera in cameras)
+            {
+                if (camera.name == "Camera ScaledSpace")
+                {
+                    scaledSpaceCam = camera;
+                }
+            }
+
             instance = this;
         }
 
         void Start()
         {
-            mun = FlightGlobals.Bodies.Find(a => a.name == "Sun");
-            CelestialBody kerbin = FlightGlobals.Bodies.Find(a => a.name == "Kerbin");
-            scaledObject = mun.scaledBody;
-             
-            cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.name = "CHILD OF THE SUN";
-            cube.transform.SetParent(scaledObject.transform,true);
-            cube.transform.localPosition = Vector3.zero;
-            float sizeInBodyRadii = 56000f;
-            cube.transform.localScale = Vector3.one * 2 * 1000 * sizeInBodyRadii; //radius body in scaled space as child is 1000
-            cube.layer = scaledObject.layer;
-
-            //cube.transform.SetParent(scaledObject.transform.parent, true);
-            Nebula nebula = cube.AddComponent<Nebula>();
-            nebula.scaledSpaceGO = scaledObject;
-            nebula.offset = Vector3.one * 400000;
-            nebula.texture = AssetLoader.LoadPNG("GameData/NiftyNebulae/PluginData/cat_eye_2.png");
-
-            Log("lossyScale: " + cube.transform.lossyScale);
             InitializeHDR();
         }
-
-        //void Update()
-        //{
-        //    //cube.transform.position = scaledObject.transform.position;
-        //    //Log("cubeScale: " + cube.transform.lossyScale);
-        //    //Log("cubePos: " + cube.transform.position);
-        //    //Log("sunScale: " + scaledObject.transform.lossyScale);
-        //    //Log("sunPos: " + scaledObject.transform.position);
-        //    //Log("cubeLocalPos: " + cube.transform.localPosition);
-        //    //Log("sunLocalPos: " + scaledObject.transform.localPosition);
-        //    //Log("sunlayer: " + scaledObject.layer);
-        //    //Log("cubelayer: " + cube.layer);
-        //    //Log("sunac: " + scaledObject.activeSelf);
-        //    //Log("cubeac: " + cube.activeSelf);
-        //    //Log("sunParent: " + scaledObject.activeSelf);
-        //    //Log("cubeParent: " + cube.activeSelf);
-        //    //Log("testingThing: " + SceneManager.GetActiveScene().name + (cube != null));
-        //    //Log("scale: " + ScaledSpace.ScaleFactor);
-        //}
 
         void InitializeHDR()
         { 
@@ -80,7 +47,12 @@ namespace NiftyNebulae
             {
                 Log("ΦΩΤΟΓΡΑΦΙΚΗ ΜΗΧΑΝΗ: " + camera.name + ", cullingMask: " + Convert.ToString(camera.cullingMask));
                 camera.allowHDR = true;
-                camera.nearClipPlane *= 1.5f;
+                Log("farClipPlane: " + camera.farClipPlane);
+                if (camera.name == "Camera 00" || camera.name == "GalaxyCamera" || camera.name == "SkySphere Cam")
+                {
+                    camera.nearClipPlane *= 5f;
+                    camera.farClipPlane *= 10f;
+                }
             }
             //Graphics.activeTier
         }
@@ -119,9 +91,30 @@ namespace NiftyNebulae
         }
     }
 
+    [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
+    public class GeneralDebug : MonoBehaviour
+    {
+        Camera[] cameras;
+
+        void Start()
+        {
+            cameras = FindObjectsOfType<Camera>();
+        }
+
+        void Update()
+        {
+            foreach (Camera camera in cameras)
+            {
+                Main.Log(camera.name + " position: " + camera.transform.position);
+                Main.Log(camera.name + " local position: " + camera.transform.localPosition);
+            }
+        }
+    }
+
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class FlightDebug : MonoBehaviour
     {
+        Camera scaledCam;
         void Start()
         {
             AtmosphereFromGround[] atmospheres = GameObject.FindObjectsOfType<AtmosphereFromGround>();
@@ -142,6 +135,7 @@ namespace NiftyNebulae
         {
             Main.Log("active: " + Main.instance.scaledObject.activeSelf);
             Main.Log("cube active: " + Main.instance.cube.activeSelf);
+            Main.Log("meshrenderer active: " + Main.instance.cube.GetComponent<MeshRenderer>().enabled);
         }
     }
 }

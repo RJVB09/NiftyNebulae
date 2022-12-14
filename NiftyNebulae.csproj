@@ -73,9 +73,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetLoader.cs" />
+    <Compile Include="CubeCamera.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Nebula.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UniverseSpace.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
