@@ -13,7 +13,8 @@ namespace NiftyNebulae
     public class ConfigLoader : MonoBehaviour
     {
         public UrlDir.UrlConfig[] globalSettings;
-        public UrlDir.UrlConfig[] nebulaeConfigs;
+        public List<NebulaCFG> nebulae;
+        UrlDir.UrlConfig[] nebulaeConfigs;
         public static ConfigLoader instance;
         
         [Persistent]
@@ -45,9 +46,8 @@ namespace NiftyNebulae
         {
             instance = this;
             DontDestroyOnLoad(this);
-            nebulaeConfigs = GameDatabase.Instance.GetConfigs("NiftyNebula");
             globalSettings = GameDatabase.Instance.GetConfigs("NiftyNebulaGlobals");
-            ConfigNode.LoadObjectFromConfig(this, nebulaeConfigs[0].config);
+            ConfigNode.LoadObjectFromConfig(this, globalSettings[0].config);
 
             if (globalSettings.Length == 0)
             {
@@ -68,10 +68,23 @@ namespace NiftyNebulae
 
         void Start()
         {
-
+            nebulae = new List<NebulaCFG>();
+            nebulaeConfigs = GameDatabase.Instance.GetConfigs("NiftyNebula");
+            for (int i = 0; i < nebulaeConfigs.Length; i++)
+            {
+                try
+                {
+                    NebulaCFG nbl = new NebulaCFG();
+                    ConfigNode.LoadObjectFromConfig(nbl, nebulaeConfigs[i].config);
+                    nebulae.Add(nbl);
+                }
+                catch (Exception e)
+                {
+                    Main.Log(e, LogType.Exception);
+                }
+            }
         }
     }
-
 
     public class NebulaCFG
     {
