@@ -78,6 +78,7 @@
     <Compile Include="Nebula.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UniverseSpace.cs" />
+    <Compile Include="ConfigLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

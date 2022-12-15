@@ -70,3 +70,10 @@ D:\repos\NiftyNebulae\obj\Debug\NiftyNebulae.csproj.CoreCompileInputs.cache
 D:\repos\NiftyNebulae\obj\Debug\NiftyNebulae.csproj.CopyComplete
 D:\repos\NiftyNebulae\obj\Debug\NiftyNebulae.dll
 D:\repos\NiftyNebulae\obj\Debug\NiftyNebulae.pdb
+C:\Users\junya\Source\Repos\NiftyNebulae\obj\Debug\NiftyNebulae.csproj.AssemblyReference.cache
+C:\Users\junya\Source\Repos\NiftyNebulae\obj\Debug\NiftyNebulae.csproj.CoreCompileInputs.cache
+C:\Users\junya\Source\Repos\NiftyNebulae\bin\Debug\NiftyNebulae.dll
+C:\Users\junya\Source\Repos\NiftyNebulae\bin\Debug\NiftyNebulae.pdb
+C:\Users\junya\Source\Repos\NiftyNebulae\obj\Debug\NiftyNebulae.csproj.CopyComplete
+C:\Users\junya\Source\Repos\NiftyNebulae\obj\Debug\NiftyNebulae.dll
+C:\Users\junya\Source\Repos\NiftyNebulae\obj\Debug\NiftyNebulae.pdb
