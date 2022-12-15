@@ -13,7 +13,6 @@ Shader "Unlit/Nebula3D"
         _Texture2D ("2D Texture", 2D) = "" {}
         _Texture2DSliceLength ("2D Texture slice with or height",int) = 4
         _Density ("Volume max density", float) = 1
-        _ScaleFactor ("ScaleFactor", float) = 1000000
     }
     SubShader
     {
@@ -55,14 +54,14 @@ Shader "Unlit/Nebula3D"
             }
 
             float3 _DomainScale;
-            float _ScaleFactor;
 
             float4 frag (v2f i) : SV_Target
             {
                 float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w;
                 float4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV);
                 backGroundColor.a = length(i.worldPos - float3(0,0,0)/*CamPos*/);
-                backGroundColor.a /= max(_DomainScale.x,max(_DomainScale.y,_DomainScale.z)) * _ScaleFactor;
+                //backGroundColor.a /= max(_DomainScale.x,max(_DomainScale.y,_DomainScale.z)) * _ScaleFactor;
+                backGroundColor.a = log2(backGroundColor.a);
 
                 return backGroundColor;
             }
@@ -111,7 +110,6 @@ Shader "Unlit/Nebula3D"
             float3 _DomainScale;
             float3 _DomainPosition;
             float _Density;
-            float _ScaleFactor;
 
             /*
             int2 CoordFrom3D(int3 coord, uint sliceLen)
@@ -305,7 +303,8 @@ Shader "Unlit/Nebula3D"
                 //float sceneDepth = LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture,screenSpaceUV)); //Depth in world units (not matching atm)
                 //float sceneDepth = GetSceneDepth(screenSpaceUV); //WORKS IN KSP
                 float3 viewDirection = normalize(i.worldPos - float3(0,0,0)/*CamPos*/); //WORKS IN KSP
-                backGroundColor.a *= max(_DomainScale.x,max(_DomainScale.y,_DomainScale.z)) * _ScaleFactor;
+                //backGroundColor.a *= max(_DomainScale.x,max(_DomainScale.y,_DomainScale.z)) * _ScaleFactor;
+                backGroundColor.a = pow(2,backGroundColor.a);
                 //backGroundColor.a = min(backGroundColor.a,sceneDepth); //WORKS IN KSP
                 float thickness = backGroundColor.a-length(i.worldPos - float3(0,0,0)/*CamPos*/); //WORKS IN KSP
                 //float4 raymarchedColor = RayMarchVolume(viewDirection,i.worldPos,thickness);
@@ -456,7 +455,7 @@ Shader "Unlit/Nebula3D"
 
                 float outsideDomain = 1;
                 if (!InBoundingBox(position,_DomainScale,_DomainPosition))
-                    outsideDomain = 1;
+                    outsideDomain = 0;
                 //^^^^^^^^^Bounding box shit
 
                 float4 col = tex2DAs3D(_Texture2D, texcoords, _Texture2D_TexelSize.z, _Texture2DSliceLength);
