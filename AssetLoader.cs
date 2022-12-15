@@ -21,7 +21,7 @@ namespace NiftyNebulae
 
             var assetBundle = AssetBundle.LoadFromFile(path);
             if (assetBundle == null)
-                Main.LogError("Asset bundle failed to load. Try reinstalling correctly.");
+                Main.Log("Asset bundle failed to load. Try reinstalling correctly.", LogType.Error);
             else
                 Main.Log("Asset bundle loaded.");
 
@@ -61,7 +61,7 @@ namespace NiftyNebulae
                 Main.Log("Loaded texture: " + fullPath);
             }
             else
-                Main.LogError("The path, " + fullPath + " does not lead to a texture.");
+                Main.Log("The path, " + fullPath + " does not lead to a texture.", LogType.Error);
             return tex;
         }
     }

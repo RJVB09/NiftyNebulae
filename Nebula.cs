@@ -28,15 +28,11 @@ namespace NiftyNebulae
             material.SetTexture("_Texture2D", texture);
             material.SetInt("_Texture2DSliceLength", cubeResolution);
             material.renderQueue = 2000;
-
-            //Main.log("DomainScale: " + transform.lossyScale);
-            //material.SetColor("_FillColor", Color.red);
         }
 
 
         void LateUpdate()
         {
-            //transform.position = scaledSpaceGO.transform.position + offset;
             transform.localPosition = Vector3.zero;
             transform.rotation = Quaternion.identity;
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
