@@ -12,7 +12,6 @@ namespace NiftyNebulae
     public class Main : MonoBehaviour
     {
         public Camera scaledSpaceCam;
-        public UniverseSpace universeSpace;
 
         public static Main instance;
 
@@ -36,6 +35,7 @@ namespace NiftyNebulae
 
         void Start()
         {
+
             InitializeHDR();
         }
 
