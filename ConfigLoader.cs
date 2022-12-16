@@ -13,7 +13,7 @@ namespace NiftyNebulae
     public class ConfigLoader : MonoBehaviour
     {
         public UrlDir.UrlConfig[] globalSettings;
-        public List<NebulaCFG> nebulae;
+        public static List<NebulaCFG> nebulae;
         UrlDir.UrlConfig[] nebulaeConfigs;
         public static ConfigLoader instance;
         
@@ -44,18 +44,19 @@ namespace NiftyNebulae
 
         void Awake()
         {
+            Main.Log("Is awake");
             instance = this;
             DontDestroyOnLoad(this);
             globalSettings = GameDatabase.Instance.GetConfigs("NiftyNebulaGlobals");
-            ConfigNode.LoadObjectFromConfig(this, globalSettings[0].config);
 
-            if (globalSettings.Length == 0)
+            if (globalSettings.Length == 0 || globalSettings == null)
             {
                 WriteConfigIfNoneExists();
                 Main.Log("No NiftyNebulaGlobals file found, using defaults.", LogType.Warning);
             }
             else if (globalSettings.Length > 1)
                 Main.Log("Multiple NiftyNebulaGlobals files detected, check your install.", LogType.Warning);
+
             try
             {
                 ConfigNode.LoadObjectFromConfig(this, globalSettings[0].config);
@@ -68,6 +69,7 @@ namespace NiftyNebulae
 
         void Start()
         {
+            Main.Log("Nebulae loading commenced.");
             nebulae = new List<NebulaCFG>();
             nebulaeConfigs = GameDatabase.Instance.GetConfigs("NiftyNebula");
             for (int i = 0; i < nebulaeConfigs.Length; i++)
@@ -77,6 +79,14 @@ namespace NiftyNebulae
                     NebulaCFG nebula = new NebulaCFG();
                     ConfigNode.LoadObjectFromConfig(nebula, nebulaeConfigs[i].config);
                     nebulae.Add(nebula);
+                    Main.Log("----------------------NEBULA----------------------");
+                    Main.Log("name: " + nebula.name);
+                    Main.Log("nebulaRadius: " + nebula.nebulaRadius);
+                    Main.Log("parentName: " + nebula.parentName);
+                    Main.Log("densityMultiplier: " + nebula.densityMultiplier);
+                    Main.Log("texture: " + nebula.texture);
+                    Main.Log("textureTileSize: " + nebula.textureTileSize);
+                    Main.Log("--------------------------------------------------");
                 }
                 catch (Exception e)
                 {

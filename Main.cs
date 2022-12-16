@@ -13,13 +13,6 @@ namespace NiftyNebulae
     {
         public static Camera scaledSpaceCam;
         public static Main instance;
-
-        internal CelestialBody mun;
-        internal GameObject scaledObject;
-        internal GameObject cube;
-
-        public static NebulaInstantiator nebulaInstantiator;
-        public static ConfigLoader configLoader;
         
         
         void Awake()
@@ -28,9 +21,10 @@ namespace NiftyNebulae
         }
         void Start()
         {
-            nebulaInstantiator.nebulaCFGs = configLoader.nebulae;
-            nebulaInstantiator.InstantiateAllNebulae();
-            
+            Log("maxRaymarchSteps: " + ConfigLoader.instance.maxRaymarchSteps + ", stepSize: " + ConfigLoader.instance.stepSize);
+            NebulaInstantiator.instance.nebulaCFGs = ConfigLoader.nebulae;
+            NebulaInstantiator.instance.InstantiateAllNebulae();
+            Log("maxRaymarchSteps: " + ConfigLoader.instance.maxRaymarchSteps + ", stepSize: " + ConfigLoader.instance.stepSize);
         }
 
         public static void Log(object msg, UnityEngine.LogType type = LogType.Log)
@@ -67,15 +61,15 @@ namespace NiftyNebulae
             foreach (System.Reflection.PropertyInfo property in properties)
                 Debug.Log(property.Name + ": " + property.GetValue(problem));
         }
-        public static void LogAllProperties(object[] problem, Type type)
+        public static void LogAllProperties(object[] problems, Type type)
         {
             System.Reflection.PropertyInfo[] properties = type.GetProperties(System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.GetField);
             Debug.Log("[NiftyNebulae]: Debug logging all attributes of class " + type.Name);
-            for (int i = 0; i < problem.Length; i++)
+            for (int i = 0; i < problems.Length; i++)
             {
                 Debug.Log("Debug Object Index: " + i);
                 foreach (System.Reflection.PropertyInfo property in properties)
-                    Debug.Log(property.Name + ": " + property.GetValue(problem));
+                    Debug.Log(property.Name + ": " + property.GetValue(problems[i]));
             }
         }
     }

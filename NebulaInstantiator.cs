@@ -8,10 +8,18 @@ using static NiftyNebulae.Main;
 
 namespace NiftyNebulae
 {
+    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
     public class NebulaInstantiator : MonoBehaviour
     {
         public List<NebulaCFG> nebulaCFGs;
         public List<Nebula> nebulaObjects;
+
+        public static NebulaInstantiator instance;
+
+        void Awake()
+        {
+            instance = this;
+        }
 
         public Nebula Find(Predicate<Nebula> match)
         {
