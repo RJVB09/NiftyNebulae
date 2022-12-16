@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 namespace NiftyNebulae
 {
-    [KSPAddon(KSPAddon.Startup.MainMenu, false)]
+    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
     public class Main : MonoBehaviour
     {
         public static Camera scaledSpaceCam;
@@ -17,6 +17,9 @@ namespace NiftyNebulae
         internal CelestialBody mun;
         internal GameObject scaledObject;
         internal GameObject cube;
+
+        public static NebulaInstantiator nebulaInstantiator;
+        public static ConfigLoader configLoader;
         
         
         void Awake()
@@ -25,7 +28,9 @@ namespace NiftyNebulae
         }
         void Start()
         {
-
+            nebulaInstantiator.nebulaCFGs = configLoader.nebulae;
+            nebulaInstantiator.InstantiateAllNebulae();
+            
         }
 
         public static void Log(object msg, UnityEngine.LogType type = LogType.Log)
@@ -76,7 +81,7 @@ namespace NiftyNebulae
     }
 
     [KSPAddon(KSPAddon.Startup.FlightAndKSC, false)]
-    public class FlightIni : MonoBehaviour
+    public class FlightInit : MonoBehaviour
     {
         void Start()
         {

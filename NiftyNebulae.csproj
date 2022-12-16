@@ -76,6 +76,7 @@
     <Compile Include="CubeCamera.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Nebula.cs" />
+    <Compile Include="NebulaInstantiator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UniverseSpace.cs" />
     <Compile Include="ConfigLoader.cs" />

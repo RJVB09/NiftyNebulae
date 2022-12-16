@@ -52,10 +52,10 @@ namespace NiftyNebulae
             if (globalSettings.Length == 0)
             {
                 WriteConfigIfNoneExists();
-                Main.Log("No NiftyNebulaGlobals file found, using defaults", LogType.Warning);
+                Main.Log("No NiftyNebulaGlobals file found, using defaults.", LogType.Warning);
             }
             else if (globalSettings.Length > 1)
-                Main.Log("Multiple NiftyNebulaGlobals files detected, check your install", LogType.Warning);
+                Main.Log("Multiple NiftyNebulaGlobals files detected, check your install.", LogType.Warning);
             try
             {
                 ConfigNode.LoadObjectFromConfig(this, globalSettings[0].config);
@@ -74,9 +74,9 @@ namespace NiftyNebulae
             {
                 try
                 {
-                    NebulaCFG nbl = new NebulaCFG();
-                    ConfigNode.LoadObjectFromConfig(nbl, nebulaeConfigs[i].config);
-                    nebulae.Add(nbl);
+                    NebulaCFG nebula = new NebulaCFG();
+                    ConfigNode.LoadObjectFromConfig(nebula, nebulaeConfigs[i].config);
+                    nebulae.Add(nebula);
                 }
                 catch (Exception e)
                 {
@@ -89,13 +89,15 @@ namespace NiftyNebulae
     public class NebulaCFG
     {
         [Persistent]
-        public float nebulaRadius = 1f;
+        public string name = "";
         [Persistent]
-        public string planetName = "";
+        public float nebulaRadius = 10f;
         [Persistent]
-        public float densityMultiplier = 1f;
+        public string parentName = ""; //The name of the parentbody
         [Persistent]
-        public string texture = "";
+        public float densityMultiplier = 1f; //Multiplier for nebula density.
+        [Persistent]
+        public string texture = ""; //File path, e.g. "GameData/NiftyNebulae/PluginData/cat_eye_2.png"
         [Persistent]
         public uint textureTileSize = 4u;
     }
