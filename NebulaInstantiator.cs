@@ -61,6 +61,7 @@ namespace NiftyNebulae
                 currentGameObject.transform.localScale = Vector3.one * 2 * 1000 * nebulaCFG.nebulaRadius; //Planet radius in scaled local space is always 1000 units
                 currentGameObject.layer = parentBody.scaledBody.layer;
                 currentNebula.settings = nebulaCFG;
+                currentNebula.parentBody = parentBody;
 
 
                 nebulaObjects.Add(currentNebula);

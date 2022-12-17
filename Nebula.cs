@@ -11,6 +11,7 @@ namespace NiftyNebulae
     public class Nebula : MonoBehaviour
     {
         Material material;
+        public CelestialBody parentBody;
 
         public NebulaCFG settings;
 
@@ -25,6 +26,7 @@ namespace NiftyNebulae
             material.SetFloat("_Density", 34.6410161514f / transform.lossyScale.magnitude * settings.densityMultiplier); // 20f * sqrt(3) / length of diagonal
             material.SetTexture("_Texture2D", AssetLoader.LoadPNG("GameData/" + settings.texture));
             material.SetInt("_Texture2DSliceLength", (int)settings.textureTileSize);
+
             material.renderQueue = 2000;
         }
 
@@ -32,9 +34,8 @@ namespace NiftyNebulae
         void LateUpdate()
         {
             transform.localPosition = Vector3.zero;
-            transform.rotation = Quaternion.identity;
-            Main.Log("Rotation parent: " + gameObject.transform.parent.rotation.eulerAngles);
-            Main.Log("Rotation universe: " + gameObject.transform.parent.parent.rotation.eulerAngles);
+            transform.localRotation = Quaternion.identity;
+            material.SetFloat("_Rotation", (gameObject.transform.parent.rotation.eulerAngles.y + (float)parentBody.rotationAngle) * Mathf.Deg2Rad);
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
         }
