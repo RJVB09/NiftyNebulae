@@ -65,6 +65,8 @@ namespace NiftyNebulae
             {
                 Main.Log(e.Message, LogType.Exception);
             }
+
+            Main.Log("(CURRENT SETTINGS) maxRaymarchSteps: " + ConfigLoader.instance.maxRaymarchSteps + ", stepSize: " + ConfigLoader.instance.stepSize);
         }
 
         void Start()
@@ -90,7 +92,7 @@ namespace NiftyNebulae
                 }
                 catch (Exception e)
                 {
-                    Main.Log(e, LogType.Exception);
+                    Main.Log("Couldn't load nebula from config. " + e, LogType.Exception);
                 }
             }
         }

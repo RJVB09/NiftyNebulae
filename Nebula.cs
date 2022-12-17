@@ -33,6 +33,8 @@ namespace NiftyNebulae
         {
             transform.localPosition = Vector3.zero;
             transform.rotation = Quaternion.identity;
+            Main.Log("Rotation parent: " + gameObject.transform.parent.rotation.eulerAngles);
+            Main.Log("Rotation universe: " + gameObject.transform.parent.parent.rotation.eulerAngles);
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
         }

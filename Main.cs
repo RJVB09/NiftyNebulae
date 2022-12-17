@@ -21,10 +21,8 @@ namespace NiftyNebulae
         }
         void Start()
         {
-            Log("maxRaymarchSteps: " + ConfigLoader.instance.maxRaymarchSteps + ", stepSize: " + ConfigLoader.instance.stepSize);
             NebulaInstantiator.instance.nebulaCFGs = ConfigLoader.nebulae;
             NebulaInstantiator.instance.InstantiateAllNebulae();
-            Log("maxRaymarchSteps: " + ConfigLoader.instance.maxRaymarchSteps + ", stepSize: " + ConfigLoader.instance.stepSize);
         }
 
         public static void Log(object msg, UnityEngine.LogType type = LogType.Log)
