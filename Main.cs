@@ -81,6 +81,14 @@ namespace NiftyNebulae
             foreach (AtmosphereFromGround atmo in atmospheres)
                 atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue = 2500; //first: nebula, second: planet, third: atmosphere
             InitializeHDR();
+            /*
+            SkySphereControl[] gameObjects = GameObject.FindObjectsOfType<SkySphereControl>();
+            Main.Log("Logging all objects in scene " + SceneManager.GetActiveScene().name);
+            foreach (SkySphereControl GO in gameObjects)
+            {
+                Main.Log(GO.gameObject.name);
+            }
+            */
         }
         void InitializeHDR()
         { 

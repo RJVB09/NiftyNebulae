@@ -109,6 +109,8 @@ namespace NiftyNebulae
         [Persistent]
         public float densityMultiplier = 1f; //Multiplier for nebula density.
         [Persistent]
+        public bool shouldFadeWithSkybox = true; //Whether the nebula should fade to darkness when entering an atmosphere, making it invisible in daytime. 
+        [Persistent]
         public string texture = ""; //File path, e.g. "GameData/NiftyNebulae/PluginData/cat_eye_2.png"
         [Persistent]
         public uint textureTileSize = 4u;
