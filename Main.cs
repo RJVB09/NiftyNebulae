@@ -81,15 +81,39 @@ namespace NiftyNebulae
             foreach (AtmosphereFromGround atmo in atmospheres)
                 atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue = 2500; //first: nebula, second: planet, third: atmosphere
             InitializeHDR();
-            /*
-            SkySphereControl[] gameObjects = GameObject.FindObjectsOfType<SkySphereControl>();
+            
+            GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();
             Main.Log("Logging all objects in scene " + SceneManager.GetActiveScene().name);
-            foreach (SkySphereControl GO in gameObjects)
+            /*
+            foreach (GameObject GO in gameObjects)
             {
-                Main.Log(GO.gameObject.name);
+                if (GO.gameObject.layer == 18)
+                {
+                    Main.Log(GO.gameObject.name);
+                    Component[] components = GO.GetComponents(typeof(Component));
+                    if (GO.gameObject.name == "YP")
+                    {
+                        YP = GO.gameObject;
+                        Material m = GO.GetComponent<MeshRenderer>().material;
+                        Main.Log("Shader: " + (m.shader != null));
+                        Main.Log("Property length: " + m.shader.GetPropertyCount());
+                        if (m.shader != null)
+                        {
+                            Main.Log("Property 1: " + m.shader.GetPropertyName(0));
+                            Main.Log("Property 2: " + m.shader.GetPropertyName(1));
+                            Main.Log("Shader name: " + m.shader.name);
+                        }
+                    }
+                    foreach (Component component in components)
+                    {
+                        Debug.Log(component.ToString());
+                    }
+                }
             }
             */
+            
         }
+
         void InitializeHDR()
         { 
             Camera[] cameras = FindObjectsOfType<Camera>();
