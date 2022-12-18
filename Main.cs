@@ -79,7 +79,10 @@ namespace NiftyNebulae
         {
             AtmosphereFromGround[] atmospheres = GameObject.FindObjectsOfType<AtmosphereFromGround>();
             foreach (AtmosphereFromGround atmo in atmospheres)
+            {
+                Main.Log("atmoLayer: " + atmo.gameObject.layer);
                 atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue = 2500; //first: nebula, second: planet, third: atmosphere
+            }
             InitializeHDR();
             
             GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();

@@ -8,8 +8,8 @@ namespace NiftyNebulae
     {
         //Just nicked the GalaxyCubeControl.cs code and changed some stuff.
 
-        public Color minGalaxyColor = Color.black;
-        public Color maxGalaxyColor = Color.white;
+        public float min = 0;
+        public float max = 1;
         public float atmosFadeLimit = 0.6f;
         public float glareFadeLimit = 0.6f;
         public float daytimeFadeLimit = 0.9f;
@@ -35,11 +35,27 @@ namespace NiftyNebulae
         {
             sunRef = GalaxyCubeControl.Instance.sunRef;
             tgt = GalaxyCubeControl.Instance.tgt;
+
+            atmosFadeLimit = GalaxyCubeControl.Instance.atmosFadeLimit;
+            glareFadeLimit = GalaxyCubeControl.Instance.glareFadeLimit;
+            daytimeFadeLimit = GalaxyCubeControl.Instance.daytimeFadeLimit;
+            airPressureFade = GalaxyCubeControl.Instance.airPressureFade;
+            glareFadeLerpRate = GalaxyCubeControl.Instance.glareFadeLerpRate;
+            min = GalaxyCubeControl.Instance.minGalaxyColor.r;
+            max = GalaxyCubeControl.Instance.maxGalaxyColor.r;
             layerMask = 1 << LayerMask.NameToLayer("Scaled Scenery");
         }
 
         private void Update()
         {
+            atmosFadeLimit = GalaxyCubeControl.Instance.atmosFadeLimit;
+            glareFadeLimit = GalaxyCubeControl.Instance.glareFadeLimit;
+            daytimeFadeLimit = GalaxyCubeControl.Instance.daytimeFadeLimit;
+            airPressureFade = GalaxyCubeControl.Instance.airPressureFade;
+            glareFadeLerpRate = GalaxyCubeControl.Instance.glareFadeLerpRate;
+            min = GalaxyCubeControl.Instance.minGalaxyColor.r;
+            max = GalaxyCubeControl.Instance.maxGalaxyColor.r;
+
             lineOfSightToSun = LineOfSightToSun();
             if (lineOfSightToSun)
             {
