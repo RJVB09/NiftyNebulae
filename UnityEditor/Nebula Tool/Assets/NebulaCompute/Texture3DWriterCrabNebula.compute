@@ -1,0 +1,133 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+RWTexture2D<float4> Result;
+int _Texture2DSize;
+int _Texture3DSize;
+
+float fract(float x)
+{
+	return x - floor(x);
+}
+
+float3 random3(float3 c) 
+{
+	float j = 4096.0*sin(dot(c,float3(17.0, 59.4, 15.0)));
+	float3 r;
+	r.z = fract(512.0*j);
+	j *= .125;
+	r.x = fract(512.0*j);
+	j *= .125;
+	r.y = fract(512.0*j);
+	return r-0.5;
+}
+
+float3 smoothStep(float3 x)
+{
+    return 6.0 * pow(x,5.0) - 15.0 * pow(x,4.0) + 10.0 * pow(x,3.0);
+}
+
+float lerp3d(float o, float x, float y, float z, float xy, float xz, float yz, float xyz, float3 target)
+{
+    target = smoothStep(target);
+    return lerp(lerp(lerp(o,z,target.z),lerp(x,xz,target.z),target.x),lerp(lerp(y,yz,target.z),lerp(xy,xyz,target.z),target.x),target.y);
+}
+
+float perlin(float3 pos)
+{
+    float3 oPos = pos % float3(1,1,1);
+    float3 xPos = oPos - float3(1.0,0.0,0.0);
+    float3 yPos = oPos - float3(0.0,1.0,0.0);
+    float3 zPos = oPos - float3(0.0,0.0,1.0);
+    
+    float3 xyPos = oPos - float3(1.0,1.0,0.0);
+    float3 xzPos = oPos - float3(1.0,0.0,1.0);
+    float3 yzPos = oPos - float3(0.0,1.0,1.0);
+    
+    float3 xyzPos = oPos - float3(1.0,1.0,1.0);
+    
+    
+    float3 oRandom = normalize(random3(floor(pos) + float3(0.0,0.0,0.0)));
+    float3 xRandom = normalize(random3(floor(pos) + float3(1.0,0.0,0.0)));
+    float3 yRandom = normalize(random3(floor(pos) + float3(0.0,1.0,0.0)));
+    float3 zRandom = normalize(random3(floor(pos) + float3(0.0,0.0,1.0)));
+    
+    float3 xyRandom = normalize(random3(floor(pos) + float3(1.0,1.0,0.0)));
+    float3 xzRandom = normalize(random3(floor(pos) + float3(1.0,0.0,1.0)));
+    float3 yzRandom = normalize(random3(floor(pos) + float3(0.0,1.0,1.0)));
+    
+    float3 xyzRandom = normalize(random3(floor(pos) + float3(1.0,1.0,1.0)));
+    
+    
+    float outputValue = lerp3d(dot(oPos,oRandom),dot(xPos,xRandom),dot(yPos,yRandom),dot(zPos,zRandom),dot(xyPos,xyRandom),dot(xzPos,xzRandom),dot(yzPos,yzRandom),dot(xyzPos,xyzRandom),oPos);
+    
+    return outputValue;
+}
+
+float perlin01(float3 pos)
+{
+    return perlin(pos) * 0.5 + 0.5;
+}
+
+float FractalNoise(float3 position, float frequency, int octaves, float persistence, float lacunarity)
+{
+    float noise = 0;
+    float currentFrequency = 1;
+    float currentAmplitude = 1;
+    float totalAmplitude = 1;
+    for (int i = 0; i < octaves; i++)
+    {
+        noise += currentAmplitude * perlin(position*frequency*currentFrequency);
+        currentFrequency *= lacunarity;
+        currentAmplitude *= persistence;
+        totalAmplitude += currentAmplitude;
+    }
+
+    return noise/totalAmplitude;
+}
+
+float sphere(float3 pos)
+{
+    return clamp(1 - length(pos),0,1);
+}
+
+float4 VolumeMain(float3 uv3D, float3 uvCoordsFromCenter, float3 coordsInCube)
+{
+    float3 randomPerlinVec = float3(perlin(coordsInCube * 0.01 + float3(22,14,123)),perlin(coordsInCube * 0.01 + float3(134,431,645)),perlin(coordsInCube * 0.01 + float3(243,554,63)));
+    float distortedSphere = sphere(uvCoordsFromCenter + 0.5*randomPerlinVec);
+    //pow(1-2*abs(sphere(uvCoordsFromCenter + 0.5*randomPerlinVec)-0.5),50))
+
+    float perlin1 = FractalNoise(coordsInCube * 0.04 + float3(243,232,32) + 0.5*randomPerlinVec,1,5,0.5,2);
+    float perlin2 = FractalNoise(coordsInCube * 0.02 + float3(24,654,34) + 0.5*randomPerlinVec,1,5,0.5,2);
+    float perlin3 = 1 - clamp(10*FractalNoise(coordsInCube * 0.015 + float3(764,34,761) + 0.5*randomPerlinVec,1,5,0.5,2)-0,0,1);
+    float fillaments = clamp(pow(1-abs(perlin1-perlin2),50),0,1);
+
+    float jaggedClouds = fillaments * clamp(pow(1-2*abs(distortedSphere-0.5),5),0,1) * perlin3;
+    float mist = pow(clamp(distortedSphere-0.2,0,1),3.5);
+    float cloudsInner = clamp(10*(distortedSphere-0.5)+0.5,0,1);
+
+    float3 finalCol = lerp(float3(1,0,0),float3(1,0.5,0),cloudsInner);
+    finalCol = lerp(float3(0.6,0.8,1),finalCol,pow(jaggedClouds,0.3));
+    finalCol = lerp(finalCol,float3(0, 0.98431, 0.88235),pow(mist,0.1) - pow(jaggedClouds,0.05));
+
+    //fillaments * clamp(pow(1-2*abs(distortedSphere-0.5),5),0,1)
+    //pow(clamp(distortedSphere-0.2,0,1),4)
+
+	return float4(finalCol,mist+jaggedClouds);
+}
+
+[numthreads(32,32,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    float3 coordsInCube = float3(id.x%float(_Texture3DSize), id.y%float(_Texture3DSize), floor(id.y/float(_Texture3DSize)) + floor(id.x/float(_Texture3DSize)) * (float(_Texture2DSize)/float(_Texture3DSize)));
+    float3 uv3D = coordsInCube / float(_Texture3DSize);
+    float3 uvCoordsFromCenter = (uv3D-0.5)*2; //-1 to 1
+    
+    //float col = uv3D;
+    float4 col = VolumeMain(uv3D,uvCoordsFromCenter,coordsInCube);
+
+	//(random3(coordsInCube) + float3(1,1,1))/2
+
+    Result[id.xy] = col;
+}

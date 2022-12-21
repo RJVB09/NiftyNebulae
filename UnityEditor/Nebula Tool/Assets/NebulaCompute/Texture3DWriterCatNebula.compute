@@ -1,0 +1,146 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+RWTexture2D<float4> Result;
+int _Texture2DSize;
+int _Texture3DSize;
+
+float fract(float x)
+{
+	return x - floor(x);
+}
+
+float3 random3(float3 c) 
+{
+	float j = 4096.0*sin(dot(c,float3(17.0, 59.4, 15.0)));
+	float3 r;
+	r.z = fract(512.0*j);
+	j *= .125;
+	r.x = fract(512.0*j);
+	j *= .125;
+	r.y = fract(512.0*j);
+	return r-0.5;
+}
+
+float3 smoothStep(float3 x)
+{
+    return 6.0 * pow(x,5.0) - 15.0 * pow(x,4.0) + 10.0 * pow(x,3.0);
+}
+
+float lerp3d(float o, float x, float y, float z, float xy, float xz, float yz, float xyz, float3 target)
+{
+    target = smoothStep(target);
+    return lerp(lerp(lerp(o,z,target.z),lerp(x,xz,target.z),target.x),lerp(lerp(y,yz,target.z),lerp(xy,xyz,target.z),target.x),target.y);
+}
+
+float perlin(float3 pos)
+{
+    float3 oPos = pos % float3(1,1,1);
+    float3 xPos = oPos - float3(1.0,0.0,0.0);
+    float3 yPos = oPos - float3(0.0,1.0,0.0);
+    float3 zPos = oPos - float3(0.0,0.0,1.0);
+    
+    float3 xyPos = oPos - float3(1.0,1.0,0.0);
+    float3 xzPos = oPos - float3(1.0,0.0,1.0);
+    float3 yzPos = oPos - float3(0.0,1.0,1.0);
+    
+    float3 xyzPos = oPos - float3(1.0,1.0,1.0);
+    
+    
+    float3 oRandom = normalize(random3(floor(pos) + float3(0.0,0.0,0.0)));
+    float3 xRandom = normalize(random3(floor(pos) + float3(1.0,0.0,0.0)));
+    float3 yRandom = normalize(random3(floor(pos) + float3(0.0,1.0,0.0)));
+    float3 zRandom = normalize(random3(floor(pos) + float3(0.0,0.0,1.0)));
+    
+    float3 xyRandom = normalize(random3(floor(pos) + float3(1.0,1.0,0.0)));
+    float3 xzRandom = normalize(random3(floor(pos) + float3(1.0,0.0,1.0)));
+    float3 yzRandom = normalize(random3(floor(pos) + float3(0.0,1.0,1.0)));
+    
+    float3 xyzRandom = normalize(random3(floor(pos) + float3(1.0,1.0,1.0)));
+    
+    
+    float outputValue = lerp3d(dot(oPos,oRandom),dot(xPos,xRandom),dot(yPos,yRandom),dot(zPos,zRandom),dot(xyPos,xyRandom),dot(xzPos,xzRandom),dot(yzPos,yzRandom),dot(xyzPos,xyzRandom),oPos);
+    
+    return outputValue;
+}
+
+float perlin01(float3 pos)
+{
+    return perlin(pos) * 0.5 + 0.5;
+}
+
+float FractalNoise(float3 position, float frequency, int octaves, float persistence, float lacunarity)
+{
+    float noise = 0;
+    float currentFrequency = 1;
+    float currentAmplitude = 1;
+    float totalAmplitude = 1;
+    for (int i = 0; i < octaves; i++)
+    {
+        noise += currentAmplitude * perlin(position*frequency*currentFrequency);
+        currentFrequency *= lacunarity;
+        currentAmplitude *= persistence;
+        totalAmplitude += currentAmplitude;
+    }
+
+    return noise/totalAmplitude;
+}
+
+float sphere(float3 pos)
+{
+    return clamp(1 - length(pos),0,1);
+}
+
+float4 VolumeMain(float3 uv3D, float3 uvCoordsFromCenter, float3 coordsInCube)
+{
+	//float3 normalizedRandomVector = normalize(random3(coordsInCube));
+    float perlin1 = perlin(coordsInCube * 0.04) * 0.5 + 0.5;
+    float perlin2 = perlin(coordsInCube * 0.02 + float3(43,5,13)) * 0.5 + 0.5;
+    float perlin3 = perlin(coordsInCube * 0.06);
+    float perlin4 = (1 - clamp(FractalNoise(coordsInCube + float3(43,5,13),0.06,1,0.5,2) * 3,0,1))*clamp(1-(perlin2-0.5)*4,0,1);
+    float perlin5 = clamp(perlin01(coordsInCube * 0.05 + float3(355,12,-343)),0,1);
+    float spherev = clamp(1 - length(uvCoordsFromCenter),0,1);
+    float distortedSphere = 1 - length(uvCoordsFromCenter * float3(1,0.75,1) + 0.25*float3(0,perlin3,0));
+
+    float hollowSphere = pow(1-2*abs(distortedSphere-0.75),40);
+    float fillaments = pow(1-abs(perlin1-perlin2),10);
+    
+    float innerBubble = clamp(lerp(hollowSphere,fillaments*hollowSphere,0.8),0,1);
+
+
+    float outerBubble1 = perlin4*0.5*pow(1-2*abs(sphere(uvCoordsFromCenter + 0.3*float3(0,perlin1,0) - float3(0.1,0.4,0.1))-0.5),80); //* min(max(1000*(sphere(uvCoordsFromCenter + 0.3*float3(0,perlin1,0) - float3(0.1,0.4,0.1))-0.599),0.6)-0.6,1);
+    float outerBubble2 = perlin4*0.5*pow(1-2*abs(sphere(uvCoordsFromCenter + 0.3*float3(0,perlin1,0) + float3(0.1,0.2,0.1))-0.5),80);
+
+    float bubbleInside1 = clamp(1000*(sphere(uvCoordsFromCenter + 0.3*float3(0,perlin1,0) - float3(0.1,0.4,0.1))-0.5)+0.5,0,1);
+    float bubbleInside2 = clamp(1000*(sphere(uvCoordsFromCenter + 0.3*float3(0,perlin1,0) + float3(0.1,0.2,0.1))-0.5)+0.5,0,1);
+
+    float3 bubbleColor = lerp(float3(0.6, 0.8, 1),float3(1, 0.8, 0.6),clamp(bubbleInside1+bubbleInside2,0,1));
+    float3 innerBubbleColor = lerp(lerp(float3(0, 0.4, 1),float3(0, 0.2, 1),perlin5),float3(1,1,1),pow(innerBubble,1));
+
+    float shockwaveSphere = sphere(uvCoordsFromCenter + 0.1*float3(0,perlin1,0));
+    float shockwave = 0.4*((sqrt(2)*pow(sin((30+(perlin1*2-1)*5)*shockwaveSphere+(perlin1*2-1)*3),6))/(exp(7*5.8*(shockwaveSphere-0.78))+exp(-5.8*(shockwaveSphere-0.78))))*(1-exp(-100*pow(shockwaveSphere,2)));
+
+    float3 col = lerp(lerp(float3(0, 0.27647, 1),float3(1, 0.8, 0.6),pow(spherev,0.75)),bubbleColor,pow(clamp(innerBubble + outerBubble1 + outerBubble2,0,1),0.1));
+    col = lerp(col,innerBubbleColor,pow(innerBubble,0.2));
+
+    float star = pow(spherev,20);
+    col = lerp(col,float3(1,1,1),pow(star,0.5));
+
+	return float4(col, innerBubble + outerBubble1 + outerBubble2 + shockwave + star);
+}
+
+[numthreads(32,32,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    float3 coordsInCube = float3(id.x%float(_Texture3DSize), id.y%float(_Texture3DSize), floor(id.y/float(_Texture3DSize)) + floor(id.x/float(_Texture3DSize)) * (float(_Texture2DSize)/float(_Texture3DSize)));
+    float3 uv3D = coordsInCube / float(_Texture3DSize);
+    float3 uvCoordsFromCenter = (uv3D-0.5)*2; //-1 to 1
+    
+    //float col = uv3D;
+    float4 col = VolumeMain(uv3D,uvCoordsFromCenter,coordsInCube);
+
+	//(random3(coordsInCube) + float3(1,1,1))/2
+
+    Result[id.xy] = col;
+}
