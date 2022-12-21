@@ -111,6 +111,8 @@ namespace NiftyNebulae
         [Persistent]
         public bool shouldFadeWithSkybox = true; //Whether the nebula should fade to darkness when entering an atmosphere, making it invisible in daytime. 
         [Persistent]
+        public float fadeAmount = 1; //1 = invisible at day, 0 = visible at daytime, same as shouldFadeWithSkybox = false. Can be any value inbetween.
+        [Persistent]
         public string texture = ""; //File path, e.g. "GameData/NiftyNebulae/PluginData/cat_eye_2.png"
         [Persistent]
         public uint textureTileSize = 4u;

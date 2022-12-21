@@ -42,7 +42,7 @@ namespace NiftyNebulae
             material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
             if (settings.shouldFadeWithSkybox && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
             {
-                material.SetFloat("_Density", density * (1 - Mathf.Clamp01(SkyFade.Instance.totalFade)));
+                material.SetFloat("_Density", density * (1 - Mathf.Pow(Mathf.Clamp01(SkyFade.Instance.totalFade) * settings.fadeAmount, 0.5f)));
             }
             else
             {
