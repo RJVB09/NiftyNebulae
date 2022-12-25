@@ -8,7 +8,7 @@ using UnityEngine;
 namespace NiftyNebulae
 {
     [DefaultExecutionOrder(580)]
-    public class Nebula : MonoBehaviour
+    public class Nebula2 : MonoBehaviour
     {
         Material material;
         public CelestialBody parentBody;
@@ -30,8 +30,7 @@ namespace NiftyNebulae
             material.SetTexture("_Texture2D", AssetLoader.LoadPNG("GameData/" + settings.texture));
             material.SetInt("_Texture2DSliceLength", (int)settings.textureTileSize);
 
-            material.renderQueue = 2700;
-            //Debug.Log(settings.name + " render queue: " + material.renderQueue);
+            material.renderQueue = renderQueueIndex;
         }
         void LateUpdate()
         {

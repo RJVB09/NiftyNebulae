@@ -13,6 +13,7 @@ namespace NiftyNebulae
     {
         public List<NebulaCFG> nebulaCFGs;
         public List<Nebula> nebulaObjects;
+        public GameObject[] nebulaGOs;
 
         public static NebulaInstantiator instance;
 
@@ -36,10 +37,26 @@ namespace NiftyNebulae
 
         public void InstantiateAllNebulae()
         {
+            Main.Log("NEBULA COUNT: " + nebulaCFGs.Count);
+            nebulaGOs = new GameObject[nebulaCFGs.Count];
+            int i = 0;
             foreach (NebulaCFG nebulaCFG in nebulaCFGs)
             {
-                GameObject currentGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Nebula currentNebula = currentGameObject.AddComponent<Nebula>();
+
+                Main.Log("----------------------NEBULA AAAAAA----------------------");
+                Main.Log("name: " + nebulaCFG.name);
+                Main.Log("nebulaRadius: " + nebulaCFG.nebulaRadius);
+                Main.Log("parentName: " + nebulaCFG.parentName);
+                Main.Log("densityMultiplier: " + nebulaCFG.densityMultiplier);
+                Main.Log("texture: " + nebulaCFG.texture);
+                Main.Log("textureTileSize: " + nebulaCFG.textureTileSize);
+                Main.Log("--------------------------------------------------");
+
+                GameObject currentGameObject = null;
+                currentGameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                currentGameObject.name = nebulaCFG.name;
+                
+                
                 CelestialBody parentBody;
                 try
                 {
@@ -55,16 +72,19 @@ namespace NiftyNebulae
                     continue;
                 }
 
-                currentGameObject.name = nebulaCFG.name;
+                
                 currentGameObject.transform.SetParent(parentBody.scaledBody.transform,true);
                 currentGameObject.transform.localPosition = Vector3.zero;
                 currentGameObject.transform.localScale = Vector3.one * 2 * 1000 * nebulaCFG.nebulaRadius; //Planet radius in scaled local space is always 1000 units
                 currentGameObject.layer = 9;//Atmosphere layer, makes it transparent to scatterer sunflares // parentBody.scaledBody.layer;
+
+                
+                Nebula currentNebula = currentGameObject.AddComponent<Nebula>();
                 currentNebula.settings = nebulaCFG;
                 currentNebula.parentBody = parentBody;
-
-
-                nebulaObjects.Add(currentNebula);
+                //nebulaObjects.Add(currentNebula);
+                nebulaGOs[i] = currentGameObject;
+                i++;
             }
         }
     }

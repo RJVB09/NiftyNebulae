@@ -117,6 +117,17 @@ namespace NiftyNebulae
             
         }
 
+        void Update()
+        {
+            //NebulaInstantiator.instance.nebulaGOs.OrderBy(o => o.transform.position.magnitude);
+            //for (int i = 0; i < NebulaInstantiator.instance.nebulaGOs.Length; i++)
+            //{
+            //    NebulaInstantiator.instance.nebulaGOs[i].GetComponent<Nebula>().renderQueueIndex = 2000 + NebulaInstantiator.instance.nebulaGOs.Length - 1 - i;
+            //    Main.Log(NebulaInstantiator.instance.nebulaGOs[i].name + ", dist: " + NebulaInstantiator.instance.nebulaGOs[i].transform.position.magnitude);
+            //}
+            //Main.Log("same parent: " + (FlightGlobals.Bodies.Find(a => a.name == "Jool").scaledBody.transform.parent == FlightGlobals.Bodies.Find(a => a.name == "Sun").scaledBody.transform.parent));
+        }
+
         void InitializeHDR()
         { 
             Camera[] cameras = FindObjectsOfType<Camera>();

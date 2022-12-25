@@ -79,6 +79,7 @@
     <Compile Include="AssetLoader.cs" />
     <Compile Include="CubeCamera.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Nebula2.cs" />
     <Compile Include="Nebula.cs" />
     <Compile Include="NebulaInstantiator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
