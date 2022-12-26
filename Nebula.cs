@@ -16,6 +16,7 @@ namespace NiftyNebulae
 
         public NebulaCFG settings;
         float density;
+        bool lowFidelityShader;
 
         void Start()
         {
@@ -39,17 +40,36 @@ namespace NiftyNebulae
             transform.localRotation = Quaternion.identity;
             material.SetFloat("_Rotation", (gameObject.transform.parent.rotation.eulerAngles.y + (float)parentBody.rotationAngle) * Mathf.Deg2Rad);
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
-            material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
-            /*
+            //material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
+            //Main.Log(settings.name + ": " + Mathf.Ceil(transform.position.magnitude / transform.lossyScale.magnitude));
+            material.SetFloat("_StepSize", transform.lossyScale.x * ConfigLoader.instance.stepSize * Mathf.Ceil(transform.position.magnitude / transform.lossyScale.magnitude)); //DYNAMIC STEP SIZE
+
+            if (transform.position.magnitude >= transform.lossyScale.magnitude && !lowFidelityShader)
+            {
+                material.shader = AssetLoader.GetShader("Unlit/Nebula3DLOD");
+                lowFidelityShader = true;
+            }
+
+            if (transform.position.magnitude < transform.lossyScale.magnitude && lowFidelityShader)
+            {
+                material.shader = AssetLoader.GetShader("Unlit/Nebula3D");
+                lowFidelityShader = false;
+            }
+
+            if (lowFidelityShader)
+                material.SetInt("_LOD", Mathf.CeilToInt(Mathf.Max(Mathf.Log(transform.position.magnitude / transform.lossyScale.magnitude - 3,3),0)));
+
+            
             if (settings.shouldFadeWithSkybox && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
             {
-                material.SetFloat("_Density", density * (1 - Mathf.Pow(Mathf.Clamp01(SkyFade.Instance.totalFade) * settings.fadeAmount, 0.5f)));
+                material.SetFloat("_Density", density * (1 - Mathf.Pow(Mathf.Clamp01(SkyFade.Instance.totalFade) * settings.fadeAmount, 0.5f))); //breaks when focused on sun
             }
             else
             {
                 material.SetFloat("_Density", density);
             }
-            */
+            
+
             //Main.Log("fade: " + Mathf.Clamp01(SkyFade.Instance.totalFade));
         }
     }

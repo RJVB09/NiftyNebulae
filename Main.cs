@@ -84,48 +84,6 @@ namespace NiftyNebulae
                 atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue = 2500; //first: nebula, second: planet, third: atmosphere
             }
             InitializeHDR();
-            
-            GameObject[] gameObjects = GameObject.FindObjectsOfType<GameObject>();
-            Main.Log("Logging all objects in scene " + SceneManager.GetActiveScene().name);
-            /*
-            foreach (GameObject GO in gameObjects)
-            {
-                if (GO.gameObject.layer == 18)
-                {
-                    Main.Log(GO.gameObject.name);
-                    Component[] components = GO.GetComponents(typeof(Component));
-                    if (GO.gameObject.name == "YP")
-                    {
-                        YP = GO.gameObject;
-                        Material m = GO.GetComponent<MeshRenderer>().material;
-                        Main.Log("Shader: " + (m.shader != null));
-                        Main.Log("Property length: " + m.shader.GetPropertyCount());
-                        if (m.shader != null)
-                        {
-                            Main.Log("Property 1: " + m.shader.GetPropertyName(0));
-                            Main.Log("Property 2: " + m.shader.GetPropertyName(1));
-                            Main.Log("Shader name: " + m.shader.name);
-                        }
-                    }
-                    foreach (Component component in components)
-                    {
-                        Debug.Log(component.ToString());
-                    }
-                }
-            }
-            */
-            
-        }
-
-        void Update()
-        {
-            //NebulaInstantiator.instance.nebulaGOs.OrderBy(o => o.transform.position.magnitude);
-            //for (int i = 0; i < NebulaInstantiator.instance.nebulaGOs.Length; i++)
-            //{
-            //    NebulaInstantiator.instance.nebulaGOs[i].GetComponent<Nebula>().renderQueueIndex = 2000 + NebulaInstantiator.instance.nebulaGOs.Length - 1 - i;
-            //    Main.Log(NebulaInstantiator.instance.nebulaGOs[i].name + ", dist: " + NebulaInstantiator.instance.nebulaGOs[i].transform.position.magnitude);
-            //}
-            //Main.Log("same parent: " + (FlightGlobals.Bodies.Find(a => a.name == "Jool").scaledBody.transform.parent == FlightGlobals.Bodies.Find(a => a.name == "Sun").scaledBody.transform.parent));
         }
 
         void InitializeHDR()

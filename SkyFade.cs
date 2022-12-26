@@ -59,7 +59,13 @@ namespace NiftyNebulae
             lineOfSightToSun = LineOfSightToSun();
             if (lineOfSightToSun)
             {
-                sunCamAngle = Math.Acos(Vector3d.Dot(-sunRef.sunDirection, (Vector3d)tgt.transform.forward)) * (180.0 / Math.PI);
+                sunCamAngle = Math.Acos(Mathf.Clamp((float)Vector3d.Dot(-sunRef.sunDirection, (Vector3d)tgt.transform.forward),-1f,1f)) * (180.0 / Math.PI);
+                Main.Log("acos: " + Math.Acos(Vector3d.Dot(-sunRef.sunDirection, (Vector3d)tgt.transform.forward)) * (180.0 / Math.PI));
+                Main.Log("dot: " + Vector3d.Dot(-sunRef.sunDirection, (Vector3d)tgt.transform.forward));
+                Main.Log("sundir: " + -sunRef.sunDirection);
+                Main.Log("sundirMag: " + -sunRef.sunDirection.magnitude);
+                Main.Log("tgtforward: " + tgt.transform.forward);
+                Main.Log("tgtforwardMag: " + tgt.transform.forward.magnitude);
                 double num = tgt.fieldOfView * 0.5;
                 float t;
                 t = Mathf.Clamp01((float)((sunCamAngle + 10.0 - num) * 0.05));
@@ -85,8 +91,8 @@ namespace NiftyNebulae
                 dayTimeFade = 0.0f;
                 atmosFade = 0.0f;
             }
-            totalFade = atmosFade + dayTimeFade + glareFade;  //Somehow goes NaN when the sun is focused
-            //Main.Log("TotalFade: " + totalFade);
+            totalFade = atmosFade + dayTimeFade + glareFade;  //Somehow glareFade goes NaN when the sun is focused FIXED
+            //Main.Log("TotalFade: " + totalFade + ", sunRef.sunDirection: " + sunRef.sunDirection + ", sunCamAngle: " + sunCamAngle + ", glareFade: " + glareFade);
         }
 
         private bool LineOfSightToSun()
