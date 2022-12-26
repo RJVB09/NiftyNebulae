@@ -21,7 +21,9 @@ namespace NiftyNebulae
         public int maxRaymarchSteps = 500;
         [Persistent]
         public float stepSize = 0.02f;
-        
+        [Persistent]
+        public bool LOD = true;
+
         private void WriteConfigIfNoneExists()
         {
             string codeBase = Assembly.GetExecutingAssembly().CodeBase;
@@ -36,6 +38,7 @@ namespace NiftyNebulae
                 configFile.WriteLine("{");
                 configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: Maximum number of steps to be taken before raymarcher terminates.");
                 configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Increase for better performance but coarser resolution.");
+                configFile.WriteLine("	LOD = true // Bool: Whether level of detail should be used. Leave false for nicer nebulae from afar.");
                 configFile.WriteLine("}");
                 configFile.Flush();
                 configFile.Close();
