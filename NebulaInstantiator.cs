@@ -75,7 +75,7 @@ namespace NiftyNebulae
                 
                 currentGameObject.transform.SetParent(parentBody.scaledBody.transform,true);
                 currentGameObject.transform.localPosition = Vector3.zero;
-                currentGameObject.transform.localScale = Vector3.one * 2 * 1000 * nebulaCFG.nebulaRadius; //Planet radius in scaled local space is always 1000 units
+                currentGameObject.transform.localScale = 2 * 1000 * nebulaCFG.nebulaRadius * nebulaCFG.domainScale; //Planet radius in scaled local space is always 1000 units
                 currentGameObject.layer = 9;//Atmosphere layer, makes it transparent to scatterer sunflares // parentBody.scaledBody.layer;
 
                 

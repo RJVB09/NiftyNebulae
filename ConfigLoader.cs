@@ -22,7 +22,7 @@ namespace NiftyNebulae
         [Persistent]
         public float stepSize = 0.02f;
         [Persistent]
-        public bool LOD = true;
+        public float InterpolationThreshold = 0.01f;
 
         private void WriteConfigIfNoneExists()
         {
@@ -38,7 +38,7 @@ namespace NiftyNebulae
                 configFile.WriteLine("{");
                 configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: Maximum number of steps to be taken before raymarcher terminates.");
                 configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Increase for better performance but coarser resolution.");
-                configFile.WriteLine("	LOD = true // Bool: Whether level of detail should be used. Leave false for nicer nebulae from afar.");
+                configFile.WriteLine("	InterpolationThreshold = 0.01 // Float");
                 configFile.WriteLine("}");
                 configFile.Flush();
                 configFile.Close();
@@ -107,6 +107,8 @@ namespace NiftyNebulae
         public string name = "";
         [Persistent]
         public float nebulaRadius = 10f;
+        [Persistent]
+        public Vector3 domainScale = Vector3.one;
         [Persistent]
         public string parentName = ""; //The name of the parentbody
         [Persistent]
