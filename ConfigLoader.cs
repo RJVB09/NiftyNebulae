@@ -22,7 +22,7 @@ namespace NiftyNebulae
         [Persistent]
         public float stepSize = 0.02f;
         [Persistent]
-        public float InterpolationThreshold = 0.01f;
+        public float interpolationThreshold = 0f;
 
         private void WriteConfigIfNoneExists()
         {
@@ -38,7 +38,7 @@ namespace NiftyNebulae
                 configFile.WriteLine("{");
                 configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: Maximum number of steps to be taken before raymarcher terminates.");
                 configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Increase for better performance but coarser resolution.");
-                configFile.WriteLine("	InterpolationThreshold = 0.01 // Float");
+                configFile.WriteLine("	interpolationThreshold = 0 // Float");
                 configFile.WriteLine("}");
                 configFile.Flush();
                 configFile.Close();

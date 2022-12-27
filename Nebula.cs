@@ -22,14 +22,16 @@ namespace NiftyNebulae
             density = 34.6410161514f / transform.lossyScale.magnitude * settings.densityMultiplier; // 20f * sqrt(3) / length of diagonal
             material = gameObject.GetComponent<MeshRenderer>().material;
             material.shader = AssetLoader.GetShader("Unlit/Nebula3D");
-            material.SetVector("_DomainScale", 2 * 1000 * settings.nebulaRadius * new Vector4(1, 1, 1, 0));
+            material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             material.SetInt("_MaxSteps", ConfigLoader.instance.maxRaymarchSteps);
             material.SetFloat("_StepSize", transform.lossyScale.x * ConfigLoader.instance.stepSize); //old 0.005
             material.SetFloat("_Density", density); // 20f * sqrt(3) / length of diagonal
             material.SetTexture("_Texture2D", AssetLoader.LoadPNG("GameData/" + settings.texture));
             material.SetInt("_Texture2DSliceLength", (int)settings.textureTileSize);
-            material.SetFloat("_BLIThreshold", ConfigLoader.instance.InterpolationThreshold);
+            material.SetFloat("_BLIThreshold", ConfigLoader.instance.interpolationThreshold);
+
+            transform.localScale = new Vector3(transform.localScale.x * settings.domainScale.x, transform.localScale.y * settings.domainScale.y, transform.localScale.z * settings.domainScale.z);
 
             material.renderQueue = 2700;
             //Debug.Log(settings.name + " render queue: " + material.renderQueue);
