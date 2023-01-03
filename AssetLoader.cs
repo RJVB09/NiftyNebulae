@@ -25,6 +25,13 @@ namespace NiftyNebulae
             else
                 Main.Log("Asset bundle loaded.");
 
+            Main.Log("The assetbundle contains the following: ");
+            UnityEngine.Object[] allAssets = assetBundle.LoadAllAssets();
+            foreach (UnityEngine.Object asset in allAssets)
+            {
+                Main.Log("- " + asset.name);
+            }
+
 
             Shader[] assetbundleShaders = assetBundle.LoadAllAssets<Shader>();
             Main.Log("Loading shaders from asset bundle:");
@@ -33,13 +40,14 @@ namespace NiftyNebulae
                 shaders.Add(currentShader.name, currentShader);
                 Main.Log("- " + currentShader.name);
             }
-            ComputeShader[] assetbundleComputeShaders = assetBundle.LoadAllAssets<ComputeShader>();
-            Main.Log("Loading compute shaders from asset bundle:");
-            foreach (ComputeShader currentComputeShader in assetbundleComputeShaders)
-            {
-                computeShaders.Add(currentComputeShader.name, currentComputeShader);
-                Main.Log("- " + currentComputeShader.name);
-            }
+            
+            //ComputeShader[] assetbundleComputeShaders = assetBundle.LoadAllAssets<ComputeShader>();
+            //Main.Log("Loading compute shaders from asset bundle:");
+            //foreach (ComputeShader currentComputeShader in assetbundleComputeShaders)
+            //{
+            //    computeShaders.Add(currentComputeShader.name, currentComputeShader);
+            //    Main.Log("- " + currentComputeShader.name);
+            //}
         }
 
         public static Shader GetShader(string name)

@@ -20,9 +20,15 @@ namespace NiftyNebulae
         [Persistent]
         public int maxRaymarchSteps = 500;
         [Persistent]
+        public int fixedRaymarchSteps = 100;
+        [Persistent]
         public float stepSize = 0.02f;
         [Persistent]
-        public float interpolationThreshold = 0f;
+        public bool fixedStepMode = false;
+        [Persistent]
+        public float interpolationThreshold = 0;
+        [Persistent]
+        public int mapLODLevel = 0;
 
         private void WriteConfigIfNoneExists()
         {
@@ -37,8 +43,11 @@ namespace NiftyNebulae
                 configFile.WriteLine("NiftyNebulaGlobals");
                 configFile.WriteLine("{");
                 configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: Maximum number of steps to be taken before raymarcher terminates.");
+                configFile.WriteLine("	fixedRaymarchSteps = 50 // Uint: Fixed number of steps to be taken before raymarcher terminates.");
                 configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Increase for better performance but coarser resolution.");
-                configFile.WriteLine("	interpolationThreshold = 0 // Float");
+                configFile.WriteLine("	fixedStepMode = False // Bool: ");
+                configFile.WriteLine("	interpolationThreshold = 0 // Float: ");
+                configFile.WriteLine("	mapLODLevel = 0 // Int: ");
                 configFile.WriteLine("}");
                 configFile.Flush();
                 configFile.Close();
