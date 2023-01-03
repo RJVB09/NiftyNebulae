@@ -42,12 +42,12 @@ namespace NiftyNebulae
                 configFile.WriteLine("// Global configuration information for NiftyNebulae.");
                 configFile.WriteLine("NiftyNebulaGlobals");
                 configFile.WriteLine("{");
-                configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: Maximum number of steps to be taken before raymarcher terminates.");
-                configFile.WriteLine("	fixedRaymarchSteps = 50 // Uint: Fixed number of steps to be taken before raymarcher terminates.");
-                configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Increase for better performance but coarser resolution.");
-                configFile.WriteLine("	fixedStepMode = False // Bool: ");
-                configFile.WriteLine("	interpolationThreshold = 0 // Float: ");
-                configFile.WriteLine("	mapLODLevel = 0 // Int: ");
+                configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: The maximum amount of steps the raymarcher is allowed to make before it terminates. Raise if you have decreased the step size and start seeing weird artifacts.");
+                configFile.WriteLine("	fixedRaymarchSteps = 50 // Uint: The amount of steps that should always be taken when using the fixed step shader.");
+                configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Should almost always be below 1. Raise for better performance but coarser looking nebulae. And vice versa, raise for nicer looking nebulae :)");
+                configFile.WriteLine("	fixedStepMode = False // Bool: Whether to use the fixed step size shader, this can be helpful for increasing performance at the cost of visuals, do take note that it gets laggy very quickly if you increase the fixedRaymarchSteps.");
+                configFile.WriteLine("	interpolationThreshold = 0 // Float: The shader uses its own way of 3D interpolation between voxels. This process requires 6 extra texture samples. By increasing this value, densities below it will be interpolated at lower quality saving on performance.");
+                configFile.WriteLine("	mapLODLevel = 0 // Uint: Drastically lowers the quality of the nebula texture allowing for faster texture sampling. The higher the number the lower the quality of the nebula.");
                 configFile.WriteLine("}");
                 configFile.Flush();
                 configFile.Close();
