@@ -29,6 +29,8 @@ namespace NiftyNebulae
         public float interpolationThreshold = 0;
         [Persistent]
         public int mapLODLevel = 0;
+        [Persistent]
+        public bool debug = false;
 
         private void WriteConfigIfNoneExists()
         {
@@ -37,6 +39,7 @@ namespace NiftyNebulae
             string pluginPath = Uri.UnescapeDataString(uri.Path);
             pluginPath = Path.GetDirectoryName(pluginPath);
             Main.Log("Generating default NiftyNebulaeGlobals.cfg");
+            ScreenMessages.PostScreenMessage("Generating default NiftyNebulaeGlobals.cfg...",5);
             using (StreamWriter configFile = new StreamWriter(pluginPath + "/../NiftyNebulaeGlobals.cfg"))
             {
                 configFile.WriteLine("// Global configuration information for NiftyNebulae.");
@@ -44,7 +47,7 @@ namespace NiftyNebulae
                 configFile.WriteLine("{");
                 configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: The maximum amount of steps the raymarcher is allowed to make before it terminates. Raise if you have decreased the step size and start seeing weird artifacts.");
                 configFile.WriteLine("	fixedRaymarchSteps = 50 // Uint: The amount of steps that should always be taken when using the fixed step shader.");
-                configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Should almost always be below 1. Raise for better performance but coarser looking nebulae. And vice versa, raise for nicer looking nebulae :)");
+                configFile.WriteLine("	stepSize = 0.02 // Float: Minimum step size for raymarcher in terms of nebula diameters. Should therefore almost always be below 1. Raise for better performance but coarser looking nebulae. And vice versa, raise for nicer looking nebulae :)");
                 configFile.WriteLine("	fixedStepMode = False // Bool: Whether to use the fixed step size shader, this can be helpful for increasing performance at the cost of visuals, do take note that it gets laggy very quickly if you increase the fixedRaymarchSteps.");
                 configFile.WriteLine("	interpolationThreshold = 0 // Float: The shader uses its own way of 3D interpolation between voxels. This process requires 6 extra texture samples. By increasing this value, densities below it will be interpolated at lower quality saving on performance.");
                 configFile.WriteLine("	mapLODLevel = 0 // Uint: Drastically lowers the quality of the nebula texture allowing for faster texture sampling. The higher the number the lower the quality of the nebula.");
@@ -65,9 +68,13 @@ namespace NiftyNebulae
             {
                 WriteConfigIfNoneExists();
                 Main.Log("No NiftyNebulaGlobals file found, using defaults.", LogType.Warning);
+                ScreenMessages.PostScreenMessage("<color=#FFE100>No NiftyNebulaGlobals file found, using defaults.</color>", 5);
             }
             else if (globalSettings.Length > 1)
+            {
                 Main.Log("Multiple NiftyNebulaGlobals files detected, check your install.", LogType.Warning);
+                ScreenMessages.PostScreenMessage("<color=#FFE100>Multiple NiftyNebulaGlobals files detected, check your install.</color>", 5);
+            }
 
             try
             {

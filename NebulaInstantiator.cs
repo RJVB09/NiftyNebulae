@@ -37,13 +37,14 @@ namespace NiftyNebulae
 
         public void InstantiateAllNebulae()
         {
+            Main.Log("Instantiating following nebulae: ");
             Main.Log("NEBULA COUNT: " + nebulaCFGs.Count);
             nebulaGOs = new GameObject[nebulaCFGs.Count];
             int i = 0;
             foreach (NebulaCFG nebulaCFG in nebulaCFGs)
             {
-
-                Main.Log("----------------------NEBULA AAAAAA----------------------");
+                
+                Main.Log("----------------------NEBULA----------------------");
                 Main.Log("name: " + nebulaCFG.name);
                 Main.Log("nebulaRadius: " + nebulaCFG.nebulaRadius);
                 Main.Log("parentName: " + nebulaCFG.parentName);

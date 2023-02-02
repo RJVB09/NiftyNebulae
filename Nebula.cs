@@ -10,7 +10,7 @@ namespace NiftyNebulae
     [DefaultExecutionOrder(580)]
     public class Nebula : MonoBehaviour
     {
-        Material material;
+        public Material material;
         public CelestialBody parentBody;
         public int renderQueueIndex = 2000;
 
@@ -54,11 +54,10 @@ namespace NiftyNebulae
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             //Main.Log((int)(Mathf.Pow((transform.position.magnitude / transform.lossyScale.magnitude) + 1.0f, -1.0f) * 100));
             //material.SetInt("_FixedSteps", (int)(Mathf.Pow((transform.position.magnitude / transform.lossyScale.magnitude) + 1.0f, -1.0f) * ConfigLoader.instance.fixedRaymarchSteps));
-            material.SetFloat("_StepSize", (int)(Mathf.Pow(0.5f*(transform.position.magnitude / transform.lossyScale.magnitude) + 1.0f, -1.0f) * transform.lossyScale.x * ConfigLoader.instance.stepSize));
 
             if (settings.shouldFadeWithSkybox && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
             {
-                material.SetFloat("_Density", density * (1 - Mathf.Pow(Mathf.Clamp01(SkyFade.Instance.totalFade) * settings.fadeAmount, 0.5f))); //breaks when focused on sun
+                material.SetFloat("_Density", density * (1 - Mathf.Pow(Mathf.Clamp01(SkyFade.Instance.totalFade) * settings.fadeAmount, 0.5f)));
             }
             else
             {
