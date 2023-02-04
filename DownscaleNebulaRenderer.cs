@@ -28,7 +28,7 @@ namespace NiftyNebulae
 
         int width;
         int height;
-        public int downscale = 4;
+        public int downscale = ConfigLoader.instance.downscaleFactor;
         public Camera cam;
         CommandBuffer rendererCommandBuffer;
         RenderTexture downscaled;

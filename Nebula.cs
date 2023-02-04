@@ -33,7 +33,7 @@ namespace NiftyNebulae
             material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             material.SetInt("_MaxSteps", ConfigLoader.instance.maxRaymarchSteps);
-            material.SetInt("_FixedSteps", ConfigLoader.instance.fixedRaymarchSteps);
+            //material.SetInt("_FixedSteps", ConfigLoader.instance.fixedRaymarchSteps);
             material.SetFloat("_StepSize", transform.lossyScale.x * ConfigLoader.instance.stepSize); //old 0.005
             material.SetFloat("_Density", density); // 20f * sqrt(3) / length of diagonal
             material.SetTexture("_Texture2D", AssetLoader.LoadPNG("GameData/" + settings.texture));

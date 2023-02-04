@@ -19,12 +19,14 @@ namespace NiftyNebulae
         
         [Persistent]
         public int maxRaymarchSteps = 500;
-        [Persistent]
-        public int fixedRaymarchSteps = 100;
+        //[Persistent]
+        //public int fixedRaymarchSteps = 100;
         [Persistent]
         public float stepSize = 0.02f;
+        //[Persistent]
+        //public bool fixedStepMode = false;
         [Persistent]
-        public bool fixedStepMode = false;
+        public int downscaleFactor = 4;
         [Persistent]
         public float interpolationThreshold = 0;
         [Persistent]
