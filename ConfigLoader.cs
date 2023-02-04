@@ -47,8 +47,8 @@ namespace NiftyNebulae
                 configFile.WriteLine("// Global configuration information for NiftyNebulae.");
                 configFile.WriteLine("NiftyNebulaGlobals");
                 configFile.WriteLine("{");
-                configFile.WriteLine("	maxRaymarchSteps = 500 // Uint: The maximum amount of steps the raymarcher is allowed to make before it terminates. Raise if you have decreased the step size and start seeing weird artifacts.");
-                configFile.WriteLine("	stepSize = 0.01 // Float: Minimum step size for raymarcher in terms of nebula diameters. Should therefore almost always be below 1. Raise for better performance but coarser looking nebulae. And vice versa, raise for nicer looking nebulae :)");
+                configFile.WriteLine("	maxRaymarchSteps = 1000 // Uint: The maximum amount of steps the raymarcher is allowed to make before it terminates. Raise if you have decreased the step size and start seeing weird artifacts.");
+                configFile.WriteLine("	stepSize = 0.001 // Float: Minimum step size for raymarcher in terms of nebula diameters. Should therefore almost always be below 1. Raise for better performance but coarser looking nebulae. And vice versa, raise for nicer looking nebulae :)");
                 configFile.WriteLine("	downscaleFactor = 4 // Int: Nebulae are rendered at a lower resolution to save performance, the lower resolution is the screenresolution divided by this number. Raise for better performance but poorer screen quality.");
                 configFile.WriteLine("	interpolationThreshold = 0 // Float: The shader uses its own way of 3D interpolation between voxels. This process requires 6 extra texture samples. By increasing this value, densities below it will be interpolated at lower quality saving on performance.");
                 configFile.WriteLine("	mapLODLevel = 0 // Uint: Drastically lowers the quality of the nebula texture allowing for faster texture sampling. The higher the number the lower the quality of the nebula.");
@@ -138,5 +138,9 @@ namespace NiftyNebulae
         public string texture = ""; //File path, e.g. "GameData/NiftyNebulae/PluginData/cat_eye_2.png"
         [Persistent]
         public uint textureTileSize = 4u;
+        [Persistent]
+        public float noiseStrength = 0;
+        [Persistent]
+        public float noiseFrequency = 1;
     }
 }

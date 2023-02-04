@@ -40,6 +40,8 @@ namespace NiftyNebulae
             material.SetInt("_Texture2DSliceLength", (int)settings.textureTileSize);
             material.SetInt("_LODLevel", ConfigLoader.instance.mapLODLevel);
             material.SetFloat("_BLIThreshold", ConfigLoader.instance.interpolationThreshold);
+            material.SetFloat("_DetailStrength", settings.noiseStrength);
+            material.SetFloat("_DetailFrequency", settings.noiseFrequency);
 
             transform.localScale = new Vector3(transform.localScale.x * settings.domainScale.x, transform.localScale.y * settings.domainScale.y, transform.localScale.z * settings.domainScale.z);
 
