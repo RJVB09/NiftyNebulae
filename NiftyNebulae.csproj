@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AssetLoader.cs" />
     <Compile Include="CubeCamera.cs" />
+    <Compile Include="DownscaleNebulaRenderer.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Nebula.cs" />
     <Compile Include="NebulaInstantiator.cs" />

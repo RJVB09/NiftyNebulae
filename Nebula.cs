@@ -11,24 +11,24 @@ namespace NiftyNebulae
     public class Nebula : MonoBehaviour
     {
         public Material material;
+        public MeshRenderer meshRenderer;
         public CelestialBody parentBody;
         public int renderQueueIndex = 2000;
 
         public NebulaCFG settings;
         float density;
 
+        void Awake()
+        {
+            meshRenderer = GetComponent<MeshRenderer>();
+            meshRenderer.enabled = false;
+            material = meshRenderer.material;
+        }
+
         void Start()
         {
             density = 34.6410161514f / transform.lossyScale.magnitude * settings.densityMultiplier; // 20f * sqrt(3) / length of diagonal
-            material = gameObject.GetComponent<MeshRenderer>().material;
-            if (ConfigLoader.instance.fixedStepMode)
-            {
-                material.shader = AssetLoader.GetShader("Unlit/Nebula3DFixedStep");//FixedOuter
-            }
-            else
-            {
-                material.shader = AssetLoader.GetShader("Unlit/Nebula3D");//FixedOuter
-            }
+            material.shader = AssetLoader.GetShader("RJ/Nebula3DRaymarch");
             
             material.SetVector("_DomainScale", new Vector4(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z, 0));
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));

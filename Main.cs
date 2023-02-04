@@ -15,19 +15,18 @@ namespace NiftyNebulae
         public static Main instance;
         public static int exceptions = 0;
         public static int errors = 0;
-        
+        public Material nebulaDrawMaterial;
+
         void Awake()
         {
             instance = this;
+            nebulaDrawMaterial = new Material(AssetLoader.GetShader("RJ/Nebula3DDraw"));
         }
         void Start()
         {
             NebulaInstantiator.instance.nebulaCFGs = ConfigLoader.nebulae;
             NebulaInstantiator.instance.InstantiateAllNebulae();
-            foreach (GameObject nebula in NebulaInstantiator.instance.nebulaGOs)
-            {
-                Debug.Log(nebula.name + " exists?: " + !ReferenceEquals(nebula.GetComponent<Nebula>().material, null));
-            }
+            
         }
 
         public static void Log(object msg, UnityEngine.LogType type = LogType.Log)
@@ -91,13 +90,51 @@ namespace NiftyNebulae
                 atmo.planet.scaledBody.GetComponent<MeshRenderer>().material.renderQueue = 2500; //first: nebula, second: planet, third: atmosphere
             }
             InitializeHDR();
-            foreach (Nebula nebula in NebulaInstantiator.instance.nebulaObjects)
+            ApplyDownscaleComponentToCams();
+        }
+        
+        void ApplyDownscaleComponentToCams()
+        {
+            Camera[] cameras = FindObjectsOfType<Camera>();
+
+            List<DownscaleNebulaRenderer.NebulaMaterials> nebulaMaterials = new List<DownscaleNebulaRenderer.NebulaMaterials>();
+
+            Nebula[] nebulae = GameObject.FindObjectsOfType<Nebula>();
+            foreach (Nebula nebula in nebulae)
             {
-                Debug.Log(nebula.name + " has material?: " + !ReferenceEquals(nebula.material, null));
+                Main.Log("Adding " + nebula.settings.name + " to downscaler scripts");
+                Main.Log("material: " + !ReferenceEquals(nebula.material, null));
+                Main.Log("drawmaterial: " + !ReferenceEquals(Main.instance.nebulaDrawMaterial, null));
+                Main.Log("meshrenderer: " + !ReferenceEquals(nebula.meshRenderer, null));
+                
+
+                
+                nebulaMaterials.Add(new DownscaleNebulaRenderer.NebulaMaterials(
+                        nebula.material,
+                        Main.instance.nebulaDrawMaterial,
+                        nebula.meshRenderer
+                    )
+                );
+                
+
             }
 
-        }
+            Main.Log("Applying downscale render script to scaled space cameras.");
+            foreach (Camera camera in cameras)
+            {
+                if ((camera.cullingMask & (1 << 9)) != 0 && camera.GetComponent<DownscaleNebulaRenderer>() is null)
+                {
+                    DownscaleNebulaRenderer bufferscript = camera.gameObject.AddComponent<DownscaleNebulaRenderer>(); //Needs fixing
+                    bufferscript.SetNebulaeMaterials(nebulaMaterials);
 
+                    Main.Log("AAAAAAAAAAAAAAAAAAAAAAAAdfdsdsffdsfds: " + !ReferenceEquals(nebulae,null));
+                    Main.Log("AAAAAAAAAAAAAAAAAAAAAAAAdfdsdsffdsfds: " + nebulae.Length);
+                    Main.Log("bufferscript: " + !ReferenceEquals(bufferscript, null));
+                    bufferscript.Initialize();
+                }
+            }
+        }
+        
         void InitializeHDR()
         { 
             Camera[] cameras = FindObjectsOfType<Camera>();

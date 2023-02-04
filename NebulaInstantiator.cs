@@ -83,7 +83,7 @@ namespace NiftyNebulae
                 Nebula currentNebula = currentGameObject.AddComponent<Nebula>();
                 currentNebula.settings = nebulaCFG;
                 currentNebula.parentBody = parentBody;
-                //nebulaObjects.Add(currentNebula);
+                nebulaObjects.Add(currentNebula);
                 nebulaGOs[i] = currentGameObject;
                 i++;
             }
