@@ -124,11 +124,11 @@ namespace NiftyNebulae
             {
                 if ((camera.cullingMask & (1 << 9)) != 0 && camera.GetComponent<DownscaleNebulaRenderer>() is null)
                 {
-                    DownscaleNebulaRenderer bufferscript = camera.gameObject.AddComponent<DownscaleNebulaRenderer>(); //Needs fixing
+                    DownscaleNebulaRenderer bufferscript = camera.gameObject.AddComponent<DownscaleNebulaRenderer>();
                     bufferscript.SetNebulaeMaterials(nebulaMaterials);
 
-                    Main.Log("AAAAAAAAAAAAAAAAAAAAAAAAdfdsdsffdsfds: " + !ReferenceEquals(nebulae,null));
-                    Main.Log("AAAAAAAAAAAAAAAAAAAAAAAAdfdsdsffdsfds: " + nebulae.Length);
+                    //Main.Log("AAAAAAAAAAAAAAAAAAAAAAAAdfdsdsffdsfds: " + !ReferenceEquals(nebulae,null)); //dies
+                    //Main.Log("AAAAAAAAAAAAAAAAAAAAAAAAdfdsdsffdsfds: " + nebulae.Length);
                     Main.Log("bufferscript: " + !ReferenceEquals(bufferscript, null));
                     bufferscript.Initialize();
                 }
