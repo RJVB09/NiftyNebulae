@@ -13,3 +13,6 @@ NiftyNebulae was inspired by the volumetric nebulae seen in games such as SpaceE
 
 This is my first actual kerbal space program plugin. I made the shader in Unity before, the real challenge in this case was the KSP implementation. 
 Special thanks to RidiculeAmuser for helping me with a few things, Linx for letting me use the assetloader code of parralax and ofcourse all the people on google and stack exchange XD.
+
+This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.
+(CC BY-NC-ND 4.0)
