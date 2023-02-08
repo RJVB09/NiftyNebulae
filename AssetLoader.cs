@@ -11,6 +11,9 @@ namespace NiftyNebulae
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class AssetLoader : MonoBehaviour
     {
+        public static Dictionary<string, Texture2D> texture2Ds = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, Texture3D> texture3Ds = new Dictionary<string, Texture3D>();
+
         public static Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
         public static Dictionary<string, ComputeShader> computeShaders = new Dictionary<string, ComputeShader>();
 
@@ -57,20 +60,42 @@ namespace NiftyNebulae
 
         public static Texture2D LoadPNG(string filePath) //From Rootpath
         {
-            Texture2D tex = null;
-            byte[] fileData;
-
-            string fullPath = Path.Combine(KSPUtil.ApplicationRootPath, filePath);
-            if (File.Exists(fullPath))
-            {
-                fileData = File.ReadAllBytes(fullPath);
-                tex = new Texture2D(2, 2);
-                tex.LoadImage(fileData);
-                Main.Log("Loaded texture: " + fullPath);
-            }
+            Texture2D tex;
+            if (texture2Ds.TryGetValue(filePath, out tex))
+                return tex;
             else
-                Main.Log("The path, " + fullPath + " does not lead to a texture.", LogType.Error);
-            return tex;
+            {
+                byte[] fileData;
+
+                string fullPath = Path.Combine(KSPUtil.ApplicationRootPath, filePath);
+                if (File.Exists(fullPath))
+                {
+                    fileData = File.ReadAllBytes(fullPath);
+                    tex = new Texture2D(2, 2);
+                    tex.LoadImage(fileData);
+                    texture2Ds.Add(filePath, tex);
+                    Main.Log("Loaded texture: " + fullPath);
+                }
+                else
+                    Main.Log("The path, " + fullPath + " does not lead to a texture.", LogType.Error);
+                return tex;
+            }
+        }
+
+        public static Texture3D LoadPNGAs3D(string filePath, int tileSize)
+        {
+            Texture3D tex;
+            Texture2D tex2D;
+            if (texture3Ds.TryGetValue(filePath, out tex))
+                return tex;
+            else
+            {
+                tex2D = LoadPNG(filePath);
+                tex = Texture3DManager.Convert2DTo3D(tex2D, tileSize);
+                Main.Log("Made 3D texture for: " + Path.Combine(KSPUtil.ApplicationRootPath, filePath));
+                texture3Ds.Add(filePath, tex);
+                return tex;
+            }
         }
     }
 }

@@ -137,7 +137,7 @@ namespace NiftyNebulae
         [Persistent]
         public string texture = ""; //File path, e.g. "GameData/NiftyNebulae/PluginData/cat_eye_2.png"
         [Persistent]
-        public uint textureTileSize = 4u;
+        public int textureTileSize = 256;
         [Persistent]
         public float noiseStrength = 0;
         [Persistent]
