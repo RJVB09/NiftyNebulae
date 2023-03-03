@@ -35,7 +35,7 @@ namespace NiftyNebulae
         RenderTexture volumeDepth;
         RenderTargetIdentifier downscaledRenderTarget;
         RenderTargetIdentifier volumeDepthRenderTarget;
-
+        //lol
         public void Initialize()
         {
             cam = gameObject.GetComponent<Camera>();
