@@ -68,7 +68,7 @@ float4 Raymarch(float3 rayDirection, float3 origin, float depth)
     rayDirection = normalize(rayDirection); //ray direction normalized
     float accumulation = 0; //distance travelled in volume (weighted with density)
     float3 rayPosition = origin; //the raymarch's current position (default set at starting point)
-    float stepSize = length(origin - _WorldSpaceCameraPos) % _StepSize; //raymarch step size
+    float stepSize = _StepSize; //raymarch step size
     float depthTravelled = 0; //depth travelled through the domain 
     int stepsTaken = 0; //steps taken
     rayPosition -= rayDirection*depth;

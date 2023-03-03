@@ -12,8 +12,8 @@ namespace NiftyNebulae
     public class NebulaInstantiator : MonoBehaviour
     {
         public List<NebulaCFG> nebulaCFGs;
-        public List<Nebula> nebulaObjects;
-        public GameObject[] nebulaGOs;
+        //public List<Nebula> nebulaObjects;
+        //public GameObject[] nebulaGOs;
 
         public static NebulaInstantiator instance;
 
@@ -21,7 +21,7 @@ namespace NiftyNebulae
         {
             instance = this;
         }
-
+        /*
         public Nebula Find(Predicate<Nebula> match)
         {
             foreach (Nebula nebula in nebulaObjects)
@@ -34,13 +34,13 @@ namespace NiftyNebulae
             Log("No nebula found with Find(), returning empty nebula class.",LogType.Warning);
             return new Nebula();
         }
-
+        */
         public void InstantiateAllNebulae()
         {
             Main.Log("Instantiating following nebulae: ");
             Main.Log("NEBULA COUNT: " + nebulaCFGs.Count);
-            nebulaGOs = new GameObject[nebulaCFGs.Count];
-            int i = 0;
+            //nebulaGOs = new GameObject[nebulaCFGs.Count];
+            //int i = 0;
             foreach (NebulaCFG nebulaCFG in nebulaCFGs)
             {
                 
@@ -83,9 +83,9 @@ namespace NiftyNebulae
                 Nebula currentNebula = currentGameObject.AddComponent<Nebula>();
                 currentNebula.settings = nebulaCFG;
                 currentNebula.parentBody = parentBody;
-                nebulaObjects.Add(currentNebula);
-                nebulaGOs[i] = currentGameObject;
-                i++;
+                //nebulaObjects.Add(currentNebula);
+                //nebulaGOs[i] = currentGameObject;
+                //i++;
             }
         }
     }
