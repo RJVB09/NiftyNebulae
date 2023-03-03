@@ -66,15 +66,64 @@ Shader "RJ/Nebula3DRaymarch"
                 
                 float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w;
                 float3 viewDirection = normalize(i.worldPos - _WorldSpaceCameraPos); //WORKS IN KSP
-                float4 backGroundColor = tex2D(_GrabTexture, screenSpaceUV); //WORKS IN KSP
+                float4 backGroundColor = tex2D(_VolumeDepth, screenSpaceUV); //WORKS IN KSP
+                float depth = length(i.worldPos - _WorldSpaceCameraPos)-tex2D(_VolumeDepth, screenSpaceUV);
                 
-                float4 raymarchedColor = Raymarch(viewDirection,i.worldPos);
-                float4 col = raymarchedColor;
+                float4 raymarchedColor = Raymarch(viewDirection,i.worldPos,depth);
                 //l = lerp(backGroundColor.rgb,float3(0,thickness,1),0.5);
                 //col = lerp(backGroundColor.rgb,raymarchedColor.rgb,raymarchedColor.a);
                 //backGroundColor.rgb = float3(thickness,0,0);
 
                 return raymarchedColor;
+            }
+            ENDCG
+        }
+
+        Pass
+        {
+            Cull Back
+            Zwrite Off
+
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #include "UnityCG.cginc"
+            
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                float4 screenSpace : TEXCOORD1;
+                float3 worldPos : TEXCOORD2;
+            };
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.screenSpace = ComputeScreenPos(o.vertex);
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                return o;
+            }
+
+            float4 frag (v2f i) : SV_Target
+            {
+                
+                float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w;
+                //float3 viewDirection = normalize(i.worldPos - _WorldSpaceCameraPos); //WORKS IN KSP
+                
+                //float4 raymarchedColor = Raymarch(viewDirection,i.worldPos);
+                //float4 col = raymarchedColor;
+                //l = lerp(backGroundColor.rgb,float3(0,thickness,1),0.5);
+                //col = lerp(backGroundColor.rgb,raymarchedColor.rgb,raymarchedColor.a);
+                //backGroundColor.rgb = float3(thickness,0,0);
+
+                return float4(float3(1,1,1)*length(i.worldPos - _WorldSpaceCameraPos),1);
             }
             ENDCG
         }

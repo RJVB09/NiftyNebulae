@@ -4,6 +4,7 @@ int _FixedSteps;
 int _LODLevel;
 
 sampler3D _Texture3D;
+sampler2D _VolumeDepth;
 float3 _DomainScale;
 float3 _DomainPosition;
 float _Density;
@@ -59,34 +60,8 @@ float4 SampleVolume(float3 position)
     return col;
 }
 
-float sdBox(float3 p, float3 b )
-{
-  float3 q = abs(p) - b;
-  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
-}
-
-float3 marchdist(float3 origin, float3 dir)
-{
-    int steps = 10;
-    while (steps > 0)
-    {
-        if (dot(normalize(origin-_WorldSpaceCameraPos),dir) > 0.9)
-        {
-            return _WorldSpaceCameraPos;
-        }
-        origin += dir * -sdBox(origin - _DomainPosition, _DomainScale);
-        steps--;
-    }
-    return origin;
-}
-
-float3 clampf3(float3 t, float3 min, float3 max)
-{
-    return float3(clamp(t.x,min.x,max.x),clamp(t.y,min.y,max.y),clamp(t.z,min.z,max.z));
-}
-
 //actual raymarch function
-float4 Raymarch(float3 rayDirection, float3 origin)
+float4 Raymarch(float3 rayDirection, float3 origin, float depth)
 {
     float3 averageColor = float3(0,0,0); //the average color of the volume after travelling through it (weighted with density)
     float averageColorDivider = 0;
@@ -96,9 +71,7 @@ float4 Raymarch(float3 rayDirection, float3 origin)
     float stepSize = length(origin - _WorldSpaceCameraPos) % _StepSize; //raymarch step size
     float depthTravelled = 0; //depth travelled through the domain 
     int stepsTaken = 0; //steps taken
-    float depth;
-    rayPosition = marchdist(rayPosition,-rayDirection);
-    depth = length(origin-rayPosition);
+    rayPosition -= rayDirection*depth;
 
     while (stepsTaken < _MaxSteps)
     {

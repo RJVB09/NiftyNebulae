@@ -32,7 +32,9 @@ namespace NiftyNebulae
         public Camera cam;
         CommandBuffer rendererCommandBuffer;
         RenderTexture downscaled;
+        RenderTexture volumeDepth;
         RenderTargetIdentifier downscaledRenderTarget;
+        RenderTargetIdentifier volumeDepthRenderTarget;
 
         public void Initialize()
         {
@@ -48,9 +50,11 @@ namespace NiftyNebulae
                 width = Screen.width / downscale;
                 height = Screen.height / downscale;
             }
-            downscaled = CreateTexture(width, height);
+            downscaled = CreateTexture(width, height, RenderTextureFormat.ARGB32);
+            volumeDepth = CreateTexture(width, height, RenderTextureFormat.ARGBFloat);
 
             downscaledRenderTarget = new RenderTargetIdentifier(downscaled);
+            volumeDepthRenderTarget = new RenderTargetIdentifier(volumeDepth);
 
             ReloadCommandBuffer();
         }
@@ -68,10 +72,16 @@ namespace NiftyNebulae
             rendererCommandBuffer.name = "Nebula Rendering";
             foreach (NebulaMaterials nebulaMaterialsSingle in nebulaMaterials.OrderByDescending(o => (o.meshRenderer.transform.position - cam.transform.position).magnitude)) //Temporary depth sorting fix
             {
+                rendererCommandBuffer.SetRenderTarget(volumeDepthRenderTarget);
+                rendererCommandBuffer.ClearRenderTarget(false, true, Color.clear);
+                rendererCommandBuffer.DrawRenderer(nebulaMaterialsSingle.meshRenderer, nebulaMaterialsSingle.rayMarchMaterial, 0, 1);
+                rendererCommandBuffer.SetGlobalTexture("_VolumeDepth", volumeDepth);
+
                 rendererCommandBuffer.SetRenderTarget(downscaledRenderTarget);
                 rendererCommandBuffer.ClearRenderTarget(false, true, Color.clear);
                 rendererCommandBuffer.DrawRenderer(nebulaMaterialsSingle.meshRenderer, nebulaMaterialsSingle.rayMarchMaterial, 0, 0);
                 rendererCommandBuffer.SetGlobalTexture("_QuarterResNebula", downscaled);
+
                 rendererCommandBuffer.SetRenderTarget(BuiltinRenderTextureType.CameraTarget);
                 rendererCommandBuffer.DrawRenderer(nebulaMaterialsSingle.meshRenderer, nebulaMaterialsSingle.renderMaterial, 0, 0);
                 rendererCommandBuffer.DrawRenderer(nebulaMaterialsSingle.meshRenderer, nebulaMaterialsSingle.renderMaterial, 0, 1);
@@ -85,9 +95,9 @@ namespace NiftyNebulae
             ReloadCommandBuffer();
         }
 
-        RenderTexture CreateTexture(int width, int height)
+        RenderTexture CreateTexture(int width, int height, RenderTextureFormat format)
         {
-            RenderTexture rt = new RenderTexture(width, height, 0, RenderTextureFormat.ARGB32);
+            RenderTexture rt = new RenderTexture(width, height, 0, format);
             rt.anisoLevel = 1;
             rt.antiAliasing = 1;
             rt.volumeDepth = 0;

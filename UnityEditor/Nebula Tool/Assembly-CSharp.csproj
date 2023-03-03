@@ -68,35 +68,37 @@
     <None Include="Assets\Texture3DWriter.compute" />
     <None Include="Assets\NebulaCompute\Texture3DWriterCrabNebula.compute" />
     <None Include="Assets\NebulaCompute\Texture3DWriterCatEye2.compute" />
+    <None Include="Assets\BakeLighting.compute" />
     <None Include="Assets\KSP\Nebula3D.shader" />
     <None Include="Assets\NebulaCompute\Texture3DWriterCatNebula.compute" />
     <None Include="Assets\NebulaCompute\Texture3DWriterCrabNebula 1.compute" />
+    <None Include="Assets\Texture3DWriter 1.compute" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>D:/Unity Projects/Nebula Tool/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>D:/repos/NiftyNebulae/UnityEditor/Nebula Tool/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Unity/2019.2.2f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

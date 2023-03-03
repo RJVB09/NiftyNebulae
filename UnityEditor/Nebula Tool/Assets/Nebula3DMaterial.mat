@@ -56,7 +56,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 43e04ccaead58e14fabc26dfd6232455, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8f3f189f4a8af0243ab511aa62d4c9a9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture3D:
@@ -79,7 +79,7 @@ Material:
     - _Absorption: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _Density: 1
+    - _Density: 5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _FogDensity: 0.5

@@ -395,19 +395,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1914592128}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 839dad2d5f6d6da49b453bb11d3eb51d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  computeShader: {fileID: 0}
-  inputImage: {fileID: 0}
-  lightingInfo: {fileID: 0}
+  computeShader: {fileID: 7200000, guid: 243b465cb74adb947bc6741b5cf2f865, type: 3}
+  inputImage: {fileID: 2800000, guid: 8f3f189f4a8af0243ab511aa62d4c9a9, type: 3}
+  lightingInfo: {fileID: 2800000, guid: e6ec13e35ee1656418de2fbb7c07e611, type: 3}
   outputPath: /Images
   outputFileName: texture_lit_
   stepSize: 0.005
-  density: 20
-  lightSources: []
+  density: 30
+  lightSources:
+  - positionX: 0.5
+    positionY: 0.5
+    positionZ: 0.5
+    colorR: 0.25
+    colorG: 0.25
+    colorB: 0.25
+    colorA: 0
+    fallOffPow: 1
+    range: 1
 --- !u!114 &1914592134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,12 +424,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1914592128}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8199b822e2a4abd4f9ec332350793b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  computeShader: {fileID: 7200000, guid: 02816dc3c476b9841b7e70fd6717d727, type: 3}
+  computeShader: {fileID: 7200000, guid: 8da271ef992093e4a8b20bbab1dd12c2, type: 3}
   outputPath: /Images
-  outputFileName: texture_
+  outputFileName: texturenebdens_
   size: 4
