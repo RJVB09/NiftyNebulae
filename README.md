@@ -1,8 +1,8 @@
 # Nifty Nebulae
 Welcome to the github repository of nifty nebulae.
 
-NiftyNebulae claims to add good looking 3D volumetric nebulae to KSP. 
-Planet modders are more than welcome to use these for their planet packs, as the stock system doesn't provide much reason for one. 
+NiftyNebulae adds 3D volumetric nebulae to KSP. 
+Planet modders are more than welcome to use these nebulae for their planet packs.
 NiftyNebulae was inspired by the volumetric nebulae seen in games such as SpaceEngine or Elite Dangerous. It uses roughly the same techniques as them.
 
 ***
