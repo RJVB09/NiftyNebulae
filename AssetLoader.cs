@@ -82,20 +82,77 @@ namespace NiftyNebulae
             }
         }
 
-        public static Texture3D LoadPNGAs3D(string filePath, int tileSize)
+        public static Texture3D LoadTexture3D(string filePath, int tileSize)
         {
             Texture3D tex;
-            Texture2D tex2D;
             if (texture3Ds.TryGetValue(filePath, out tex))
                 return tex;
-            else
+
+            string texturePath = FindTexture(filePath);
+            if (texturePath == null)
             {
-                tex2D = LoadPNG(filePath);
-                tex = Texture3DManager.Convert2DTo3D(tex2D, tileSize);
-                Main.Log("Made 3D texture for: " + Path.Combine(KSPUtil.ApplicationRootPath, filePath));
-                texture3Ds.Add(filePath, tex);
-                return tex;
+                Main.Log("The path, " + Path.Combine(KSPUtil.ApplicationRootPath, filePath) + " does not lead to a texture.", LogType.Error);
+                return null;
             }
+
+            string fullPath = Path.Combine(KSPUtil.ApplicationRootPath, texturePath);
+            try
+            {
+                if (IsDDS(fullPath))
+                    tex = LoadDDSAs3D(fullPath, tileSize);
+                else
+                    tex = Texture3DManager.Convert2DTo3D(LoadPNG(texturePath), tileSize);
+            }
+            catch (Exception e)
+            {
+                Main.Log("Couldn't make a 3D texture from " + fullPath + ": " + e.Message, LogType.Error);
+                return null;
+            }
+
+            Main.Log("Made 3D texture for: " + fullPath);
+            texture3Ds.Add(filePath, tex);
+            return tex;
+        }
+
+        static string FindTexture(string filePath)
+        {
+            if (File.Exists(Path.Combine(KSPUtil.ApplicationRootPath, filePath)))
+                return filePath;
+
+            foreach (string extension in new string[] { ".dds", ".png" })
+            {
+                string candidate = Path.ChangeExtension(filePath, extension);
+                if (candidate != filePath && File.Exists(Path.Combine(KSPUtil.ApplicationRootPath, candidate)))
+                {
+                    Main.Log(filePath + " was not found, using " + candidate + " instead.", LogType.Warning);
+                    return candidate;
+                }
+            }
+
+            return null;
+        }
+
+        static bool IsDDS(string fullPath)
+        {
+            byte[] magic = new byte[4];
+            using (FileStream stream = File.OpenRead(fullPath))
+            {
+                if (stream.Read(magic, 0, 4) < 4)
+                    return false;
+            }
+            return DDSLoader.IsDDS(magic);
+        }
+
+        static Texture3D LoadDDSAs3D(string fullPath, int tileSize)
+        {
+            DDSTexture dds = DDSLoader.Load(File.ReadAllBytes(fullPath));
+            Main.Log("Loaded texture: " + fullPath + " (" + dds.format + ", " + dds.width + "x" + dds.height + (dds.depth > 1 ? "x" + dds.depth : "") + ")");
+            if (!dds.hasAlpha)
+                Main.Log(fullPath + " is saved as " + dds.format + ", which has no alpha channel. Nebula density is read from alpha, so this nebula will fill its whole cube. Save it as DXT5 or another format with alpha.", LogType.Warning);
+
+            if (dds.depth > 1)
+                return Texture3DManager.Create(dds.pixels, dds.width, dds.height, dds.depth);
+            return Texture3DManager.Convert2DTo3D(dds.pixels, dds.width, dds.height, tileSize);
         }
     }
 }
