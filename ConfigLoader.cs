@@ -28,17 +28,15 @@ namespace NiftyNebulae
         [Persistent]
         public int downscaleFactor = 4;
         [Persistent]
+        public float adaptiveStepQuality = 2;
+        [Persistent]
         public float interpolationThreshold = 0;
         [Persistent]
         public int mapLODLevel = 0;
         [Persistent]
         public bool singularityCompatibility = true;
         [Persistent]
-        public int singularityCubemapResolution = 2048;
-        [Persistent]
-        public int singularityNebulaResolution = 384;
-        [Persistent]
-        public int singularityUpdateInterval = 4;
+        public int singularityFillResolution = 128;
         [Persistent]
         public bool debug = false;
 

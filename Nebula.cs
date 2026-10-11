@@ -17,6 +17,7 @@ namespace NiftyNebulae
 
         public NebulaCFG settings;
         float density;
+        public float baseStepSize;
 
         void Awake()
         {
@@ -34,7 +35,8 @@ namespace NiftyNebulae
             material.SetVector("_DomainPosition", new Vector4(transform.position.x, transform.position.y, transform.position.z, 0));
             material.SetInt("_MaxSteps", ConfigLoader.instance.maxRaymarchSteps);
             //material.SetInt("_FixedSteps", ConfigLoader.instance.fixedRaymarchSteps);
-            material.SetFloat("_StepSize", transform.lossyScale.x * ConfigLoader.instance.stepSize); //old 0.005
+            baseStepSize = transform.lossyScale.x * ConfigLoader.instance.stepSize;
+            material.SetFloat("_StepSize", baseStepSize); //old 0.005
             material.SetFloat("_Density", density); // 20f * sqrt(3) / length of diagonal
             Texture3D texture = AssetLoader.LoadTexture3D("GameData/" + settings.texture, settings.textureTileSize);
             if (texture != null)
