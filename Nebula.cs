@@ -36,7 +36,11 @@ namespace NiftyNebulae
             //material.SetInt("_FixedSteps", ConfigLoader.instance.fixedRaymarchSteps);
             material.SetFloat("_StepSize", transform.lossyScale.x * ConfigLoader.instance.stepSize); //old 0.005
             material.SetFloat("_Density", density); // 20f * sqrt(3) / length of diagonal
-            material.SetTexture("_Texture3D", AssetLoader.LoadPNGAs3D("GameData/" + settings.texture,settings.textureTileSize));
+            Texture3D texture = AssetLoader.LoadTexture3D("GameData/" + settings.texture, settings.textureTileSize);
+            if (texture != null)
+                material.SetTexture("_Texture3D", texture);
+            else
+                density = 0;
             material.SetInt("_Texture2DSliceLength", (int)settings.textureTileSize);
             material.SetInt("_LODLevel", ConfigLoader.instance.mapLODLevel);
             material.SetFloat("_BLIThreshold", ConfigLoader.instance.interpolationThreshold);
