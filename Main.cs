@@ -49,6 +49,7 @@ namespace NiftyNebulae
                 case LogType.Error:
                     Debug.LogError("[NiftyNebulae]: " + msg);
                     errors++;
+                    ErrorPopup.Add(msg);
                     break;
                 case LogType.Warning:
                     Debug.LogWarning("[NiftyNebulae]: " + msg);
@@ -56,6 +57,7 @@ namespace NiftyNebulae
                 case LogType.Exception:
                     Debug.LogException(new Exception("[NiftyNebulae]: " + msg));
                     exceptions++;
+                    ErrorPopup.Add(msg);
                     break;
                 case LogType.Assert:
                     Debug.LogAssertion("[NiftyNebulae]: " + msg);
@@ -84,6 +86,81 @@ namespace NiftyNebulae
                 Debug.Log("Debug Object Index: " + i);
                 foreach (System.Reflection.PropertyInfo property in properties)
                     Debug.Log(property.Name + ": " + property.GetValue(problems[i]));
+            }
+        }
+    }
+
+    public class ErrorPopup : MonoBehaviour
+    {
+        const int MaxListed = 8;
+        const int MaxKnown = 64;
+        const int MaxLength = 240;
+        const int SettleFrames = 3;
+
+        static ErrorPopup instance;
+        static readonly List<string> known = new List<string>();
+        static readonly List<string> pending = new List<string>();
+        static int lastAddedFrame;
+
+        public static void Add(object msg)
+        {
+            string text = msg == null ? "" : msg.ToString();
+            int lineEnd = text.IndexOfAny(new char[] { '\r', '\n' });
+            if (lineEnd >= 0)
+                text = text.Substring(0, lineEnd);
+            if (text.Length > MaxLength)
+                text = text.Substring(0, MaxLength) + "...";
+            if (text.Length == 0 || known.Count >= MaxKnown || known.Contains(text))
+                return;
+
+            known.Add(text);
+            pending.Add(text);
+            lastAddedFrame = Time.frameCount;
+
+            if (instance == null)
+            {
+                GameObject holder = new GameObject("NiftyNebulae error popup");
+                DontDestroyOnLoad(holder);
+                instance = holder.AddComponent<ErrorPopup>();
+            }
+        }
+
+        void Update()
+        {
+            if (pending.Count == 0 || Time.frameCount - lastAddedFrame < SettleFrames)
+                return;
+
+            GameScenes scene = HighLogic.LoadedScene;
+            if (scene != GameScenes.MAINMENU && scene != GameScenes.SPACECENTER && scene != GameScenes.FLIGHT && scene != GameScenes.TRACKSTATION && scene != GameScenes.EDITOR)
+                return;
+
+            Show();
+        }
+
+        void Show()
+        {
+            StringBuilder message = new StringBuilder();
+            message.Append("NiftyNebulae was not able to load everything due to ");
+            message.Append(pending.Count == 1 ? "an error" : pending.Count + " errors");
+            message.Append(" in the loading process.\n\n");
+
+            int listed = Mathf.Min(pending.Count, MaxListed);
+            for (int i = 0; i < listed; i++)
+                message.Append("- " + pending[i] + "\n");
+            if (pending.Count > listed)
+                message.Append("...and " + (pending.Count - listed) + " more.\n");
+
+            message.Append("\nThe affected nebulae may be missing or look wrong.\n\n");
+            message.Append("Please check your nebula configs and textures, or contact the nebula pack author about the issue and send them your KSP.log.\n\n");
+            pending.Clear();
+
+            try
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "NiftyNebulaeFail", "Warning", message.ToString(), "OK", true, UISkinManager.GetSkin("MainMenuSkin"));
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
         }
     }

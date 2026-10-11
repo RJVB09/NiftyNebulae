@@ -38,7 +38,7 @@ namespace NiftyNebulae
             baseStepSize = transform.lossyScale.x * ConfigLoader.instance.stepSize;
             material.SetFloat("_StepSize", baseStepSize); //old 0.005
             material.SetFloat("_Density", density); // 20f * sqrt(3) / length of diagonal
-            Texture3D texture = AssetLoader.LoadTexture3D("GameData/" + settings.texture, settings.textureTileSize);
+            Texture3D texture = AssetLoader.LoadTexture3D("GameData/" + settings.texture, settings.textureTileSize, settings.rotation);
             if (texture != null)
                 material.SetTexture("_Texture3D", texture);
             else

@@ -133,6 +133,8 @@ namespace NiftyNebulae
         [Persistent]
         public Vector3 domainScale = Vector3.one;
         [Persistent]
+        public Vector3 rotation = Vector3.zero;
+        [Persistent]
         public string parentName = ""; //The name of the parentbody
         [Persistent]
         public float densityMultiplier = 1f; //Multiplier for nebula density.

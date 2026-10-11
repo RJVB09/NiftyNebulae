@@ -84,8 +84,17 @@ namespace NiftyNebulae
 
         public static Texture3D LoadTexture3D(string filePath, int tileSize)
         {
+            return LoadTexture3D(filePath, tileSize, Vector3.zero);
+        }
+
+        public static Texture3D LoadTexture3D(string filePath, int tileSize, Vector3 rotation)
+        {
+            string key = filePath;
+            if (rotation != Vector3.zero)
+                key = filePath + "|" + rotation.x + "," + rotation.y + "," + rotation.z;
+
             Texture3D tex;
-            if (texture3Ds.TryGetValue(filePath, out tex))
+            if (texture3Ds.TryGetValue(key, out tex))
                 return tex;
 
             string texturePath = FindTexture(filePath);
@@ -99,9 +108,9 @@ namespace NiftyNebulae
             try
             {
                 if (IsDDS(fullPath))
-                    tex = LoadDDSAs3D(fullPath, tileSize);
+                    tex = LoadDDSAs3D(fullPath, tileSize, rotation);
                 else
-                    tex = Texture3DManager.Convert2DTo3D(LoadPNG(texturePath), tileSize);
+                    tex = Texture3DManager.Convert2DTo3D(LoadPNG(texturePath), tileSize, rotation);
             }
             catch (Exception e)
             {
@@ -110,7 +119,7 @@ namespace NiftyNebulae
             }
 
             Main.Log("Made 3D texture for: " + fullPath);
-            texture3Ds.Add(filePath, tex);
+            texture3Ds.Add(key, tex);
             return tex;
         }
 
@@ -143,7 +152,7 @@ namespace NiftyNebulae
             return DDSLoader.IsDDS(magic);
         }
 
-        static Texture3D LoadDDSAs3D(string fullPath, int tileSize)
+        static Texture3D LoadDDSAs3D(string fullPath, int tileSize, Vector3 rotation)
         {
             DDSTexture dds = DDSLoader.Load(File.ReadAllBytes(fullPath));
             Main.Log("Loaded texture: " + fullPath + " (" + dds.format + ", " + dds.width + "x" + dds.height + (dds.depth > 1 ? "x" + dds.depth : "") + ")");
@@ -151,8 +160,8 @@ namespace NiftyNebulae
                 Main.Log(fullPath + " is saved as " + dds.format + ", which has no alpha channel. Nebula density is read from alpha, so this nebula will fill its whole cube. Save it as DXT5 or another format with alpha.", LogType.Warning);
 
             if (dds.depth > 1)
-                return Texture3DManager.Create(dds.pixels, dds.width, dds.height, dds.depth);
-            return Texture3DManager.Convert2DTo3D(dds.pixels, dds.width, dds.height, tileSize);
+                return Texture3DManager.Create(Texture3DManager.Rotate(dds.pixels, dds.width, dds.height, dds.depth, rotation), dds.width, dds.height, dds.depth);
+            return Texture3DManager.Convert2DTo3D(dds.pixels, dds.width, dds.height, tileSize, rotation);
         }
     }
 }
