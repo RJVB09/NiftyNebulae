@@ -32,6 +32,14 @@ namespace NiftyNebulae
         [Persistent]
         public int mapLODLevel = 0;
         [Persistent]
+        public bool singularityCompatibility = true;
+        [Persistent]
+        public int singularityCubemapResolution = 2048;
+        [Persistent]
+        public int singularityNebulaResolution = 384;
+        [Persistent]
+        public int singularityUpdateInterval = 4;
+        [Persistent]
         public bool debug = false;
 
         private void WriteConfigIfNoneExists()

@@ -29,6 +29,16 @@ namespace NiftyNebulae
             
         }
 
+        public static bool SingularityInstalled()
+        {
+            foreach (AssemblyLoader.LoadedAssembly loaded in AssemblyLoader.loadedAssemblies)
+            {
+                if (loaded.name == "Singularity" || (loaded.assembly != null && loaded.assembly.GetName().Name == "Singularity"))
+                    return true;
+            }
+            return false;
+        }
+
         public static void Log(object msg, UnityEngine.LogType type = LogType.Log)
         {
             switch (type)
@@ -118,6 +128,9 @@ namespace NiftyNebulae
                 
 
             }
+
+            if (ConfigLoader.instance.singularityCompatibility && Main.SingularityInstalled())
+                SingularityCubemap.Setup(nebulaMaterials);
 
             Main.Log("Applying downscale render script to scaled space cameras.");
             foreach (Camera camera in cameras)

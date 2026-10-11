@@ -73,7 +73,13 @@ namespace NiftyNebulae
                     continue;
                 }
 
-                
+                if (parentBody == null)
+                {
+                    Log("Couldn't find a body named " + nebulaCFG.parentName + " for nebula " + nebulaCFG.name + ", check your nebula config. Skipping node.", LogType.Error);
+                    Destroy(currentGameObject);
+                    continue;
+                }
+
                 currentGameObject.transform.SetParent(parentBody.scaledBody.transform,true);
                 currentGameObject.transform.localPosition = Vector3.zero;
                 currentGameObject.transform.localScale = 2 * 1000 * nebulaCFG.nebulaRadius * Vector3.one; //Planet radius in scaled local space is always 1000 units
